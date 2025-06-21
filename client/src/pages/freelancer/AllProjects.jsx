@@ -4,11 +4,27 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/freelancer/AllProjects.css";
 
 const AllProjects = () => {
-  const navigate = useNavigate();
   const [projects, setProjects] = useState([]);
-  const [displayProjects, setDisplayProjects] = useState([]);
-  const [allSkills, setAllSkills] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState([]);
+  const [filteredProjects, setFilteredProjects] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("userId");
+
+  const skills = [
+    "Data Science",
+    "ML",
+    "AI",
+    "Deep Learning",
+    "Python",
+    "Javascript",
+    "Django",
+    "HTML",
+    "MongoDB",
+    "Express.js",
+    "React.js",
+    "Node.js",
+  ];
 
   useEffect(() => {
     fetchProjects();
@@ -16,106 +32,107 @@ const AllProjects = () => {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:6001/fetch-projects");
-      const data = res.data;
-
-      setProjects(data);
-      setDisplayProjects([...data].reverse());
-
-      const skills = [];
-      data.forEach((project) => {
-        project.skills?.forEach((skill) => {
-          if (!skills.includes(skill)) {
-            skills.push(skill);
-          }
-        });
-      });
-
-      setAllSkills(skills);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleCategoryCheckBox = (e) => {
-    const value = e.target.value;
-    if (e.target.checked) {
-      setCategoryFilter([...categoryFilter, value]);
-    } else {
-      setCategoryFilter(categoryFilter.filter((skill) => skill !== value));
-    }
-  };
-
-  useEffect(() => {
-    if (categoryFilter.length > 0) {
-      const filtered = projects.filter((project) =>
-        categoryFilter.every((skill) => project.skills.includes(skill))
+      const response = await axios.get("http://localhost:6001/fetch-projects");
+      const filtered = response.data.filter(
+        (proj) => proj.status === "Available" || proj.freelancerId === userId
       );
-      setDisplayProjects(filtered.reverse());
-    } else {
-      setDisplayProjects([...projects].reverse());
+      setProjects(filtered.reverse());
+      setFilteredProjects(filtered.reverse());
+    } catch (err) {
+      console.error("Error fetching projects", err);
     }
-  }, [categoryFilter, projects]);
+  };
+
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearch(query);
+    filterProjects(query, selectedSkills);
+  };
+
+  const handleSkillFilter = (skill) => {
+    const updatedSkills = selectedSkills.includes(skill)
+      ? selectedSkills.filter((s) => s !== skill)
+      : [...selectedSkills, skill];
+    setSelectedSkills(updatedSkills);
+    filterProjects(search, updatedSkills);
+  };
+
+  const filterProjects = (query, skills) => {
+    let result = [...projects];
+    if (query) {
+      result = result.filter(
+        (p) =>
+          p.title.toLowerCase().includes(query) ||
+          p.description.toLowerCase().includes(query)
+      );
+    }
+    if (skills.length > 0) {
+      result = result.filter((p) =>
+        skills.every((skill) => p.skills.includes(skill))
+      );
+    }
+    setFilteredProjects(result);
+  };
 
   return (
-    <>
-      {projects.length > 0 ? (
-        <div className="all-projects-page">
-          <div className="projects-filterrs">
-            <h3>Filters</h3>
-            <hr />
-            <div className="filters">
-              <h5>Skills</h5>
-              <div className="filters-options">
-                {allSkills.map((skill) => (
-                  <div className="form-check" key={skill}>
-                    <input
-                      className="form-check-input"
-                      type="checkbox"
-                      value={skill}
-                      id={`skill-${skill}`}
-                      onChange={handleCategoryCheckBox}
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor={`skill-${skill}`}
-                    >
-                      {skill}
-                    </label>
-                  </div>
+    <div className="all-projects-container">
+      <div className="left-filter-box">
+        <h5>Filters</h5>
+        <h6>Skills</h6>
+        {skills.map((skill) => (
+          <div key={skill} className="skills">
+            <input
+              type="checkbox"
+              id={skill}
+              value={skill}
+              checked={selectedSkills.includes(skill)}
+              onChange={() => handleSkillFilter(skill)}
+            />
+            <label htmlFor={skill}> {skill}</label>
+          </div>
+        ))}
+      </div>
+
+      <div className="projects-list-box">
+        <h2 className="text-center">All Projects</h2>
+        <input
+          type="text"
+          className="form-control my-3"
+          placeholder="Search by title or description..."
+          value={search}
+          onChange={handleSearch}
+        />
+
+        {filteredProjects.length > 0 ? (
+          filteredProjects.map((project) => (
+            <div
+              key={project._id}
+              className="single-project-list"
+              onClick={() => navigate(`/project/${project._id}`)}
+            >
+              <h5 style={{ color: "steelblue" }}>{project.title}</h5>
+              <p className="text-muted">
+                {new Date(project.postedDate).toLocaleString()}
+              </p>
+              <p>{project.description}</p>
+              <div className="skill-tags">
+                {project.skills.map((skill) => (
+                  <span key={skill} className="skill-pill">
+                    {skill}
+                  </span>
                 ))}
               </div>
+              <p className="text-muted">
+                <strong>Status:</strong> {project.status} |{" "}
+                <strong>Budget:</strong> ₹{project.budget}
+              </p>
             </div>
-          </div>
-
-          <div className="projects-list">
-            <h3>All Projects</h3>
-            <hr />
-            {displayProjects.map((project) => (
-              <div
-                className="listed-project"
-                key={project._id}
-                onClick={() => navigate(`/project/${project._id}`)}
-              >
-                <div className="listed-project-head">
-                  <h3>{project.title}</h3>
-                  <p>{String(project.postedDate).slice(0, 24)}</p>
-                </div>
-                <h5>Budget ₹ {project.budget}</h5>
-                <p>{project.description}</p>
-                <div className="skills">
-                  {project.skills?.map((skill) => (
-                    <h6 key={skill}>{skill}</h6>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <p className="text-center">No projects available right now.</p>
-      )}
-    </>
+          ))
+        ) : (
+          <p>No matching projects found.</p>
+        )}
+      </div>
+    </div>
   );
 };
 

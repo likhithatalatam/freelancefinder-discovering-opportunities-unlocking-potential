@@ -40,36 +40,40 @@ const Client = () => {
   return (
     <div className="client-projects-page">
       <div className="client-projects-list">
-        <label htmlFor="projectStatus">Project Status:</label>
-        <select
-          id="projectStatus"
-          onChange={handleFilterChange}
-          value={selectedProject}
-        >
-          <option value="">All</option>
-          <option value="Completed">Completed</option>
-          <option value="Available">Available</option>
-          <option value="Assigned">Assigned</option>
-        </select>
-      </div>
-
-      <div className="projects-list">
-        {displayProjects.length > 0 ? (
-          displayProjects.map((project) => (
-            <div
-              className="project-card"
-              key={project._id}
-              onClick={() => navigate(`/client/projects/${project._id}`)}
-            >
-              <h3>{project.title}</h3>
-              <p>{project.description}</p>
-              <p>Budget: ₹{project.budget}</p>
-              <p>Status: {project.status}</p>
-            </div>
-          ))
-        ) : (
-          <p>No projects found.</p>
-        )}
+        <div className="head">
+          <label htmlFor="projectStatus" className="status">
+            My projects
+          </label>
+          <select
+            id="projectStatus"
+            onChange={handleFilterChange}
+            value={selectedProject}
+          >
+            <option value="">All</option>
+            <option value="Completed">Completed</option>
+            <option value="Available">Available</option>
+            <option value="Assigned">Assigned</option>
+          </select>
+        </div>
+        {/* ✅ Moved inside client-projects-list */}
+        <div className="projects-list">
+          {displayProjects.length > 0 ? (
+            displayProjects.map((project) => (
+              <div
+                className="project-card"
+                key={project._id}
+                onClick={() => navigate(`/client/projects/${project._id}`)}
+              >
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <p>Budget: ₹{project.budget}</p>
+                <p>Status: {project.status}</p>
+              </div>
+            ))
+          ) : (
+            <p>No projects found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

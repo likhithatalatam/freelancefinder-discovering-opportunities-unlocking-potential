@@ -7,27 +7,20 @@ import "../../styles/client/ProjectWorking.css";
 const ProjectWorking = () => {
   const { socket } = useContext(GeneralContext);
   const { id: projectId } = useParams();
-
   const [project, setProject] = useState({});
-  const [clientId, setClientId] = useState(localStorage.getItem("userId"));
-  const [chats, setChats] = useState({});
+  const [clientId] = useState(localStorage.getItem("userId"));
+  const [chats, setChats] = useState([]);
   const [message, setMessage] = useState("");
-  const [link, setLink] = useState("");
-  const [manual, setManual] = useState("");
-  const [submissionDescription, setSubmissionDescription] = useState("");
 
   useEffect(() => {
     fetchProject(projectId);
-    fetchChats(projectId);
-  }, [projectId]);
+    socket.emit("join-chat-room-client", { projectId });
 
-  useEffect(() => {
+    fetchChats();
+
     socket.on("message-from-user", fetchChats);
-
-    return () => {
-      socket.off("message-from-user", fetchChats);
-    };
-  }, [socket]);
+    return () => socket.off("message-from-user", fetchChats);
+  }, [projectId]);
 
   const fetchProject = async (id) => {
     try {
@@ -35,13 +28,8 @@ const ProjectWorking = () => {
         `http://localhost:6001/fetch-project/${id}`
       );
       setProject(response.data);
-
-      // Join socket room only after project is loaded
-      socket.emit("join-chat-room-client", {
-        projectId: id,
-      });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
@@ -50,13 +38,14 @@ const ProjectWorking = () => {
       const response = await axios.get(
         `http://localhost:6001/fetch-chats/${projectId}`
       );
-      setChats(response.data);
+      setChats(response.data || []);
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
   const sendMessage = () => {
+    if (!message.trim()) return;
     const time = new Date().toISOString();
     socket.emit("new-message", {
       projectId,
@@ -71,7 +60,7 @@ const ProjectWorking = () => {
     try {
       await axios.get(`http://localhost:6001/approve-submission/${projectId}`);
       fetchProject(projectId);
-      alert("Project marked as completed.");
+      alert("✅ Project marked as completed.");
     } catch (err) {
       console.log(err);
     }
@@ -79,9 +68,9 @@ const ProjectWorking = () => {
 
   const rejectSubmission = async () => {
     try {
-      await axios.get(`http://localhost:6001/reject_submission/${projectId}`);
+      await axios.get(`http://localhost:6001/reject-submission/${projectId}`);
       fetchProject(projectId);
-      alert("Submission rejected.");
+      alert("❌ Submission rejected.");
     } catch (err) {
       console.log(err);
     }
@@ -89,77 +78,85 @@ const ProjectWorking = () => {
 
   return (
     <div className="project-working-page">
-      <h3>{project.title}</h3>
-      <p>{project.description}</p>
-      <p>Budget: ₹{project.budget}</p>
-      <p>Deadline: {project.deadline}</p>
-      <p>Status: {project.status}</p>
-
-      {project.submission && (
-        <div className="submission-box">
-          <h4>Project Submission</h4>
-          <p>Description: {project.submissionDescription}</p>
-          <p>
-            Project Link:{" "}
-            <a
-              href={project.projectlink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {project.projectlink}
-            </a>
-          </p>
-          <p>
-            Manual Link:{" "}
-            <a
-              href={project.manuallink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {project.manuallink}
-            </a>
-          </p>
-          {!project.submissionAccepted ? (
-            <div className="action-buttons">
-              <button className="btn btn-success" onClick={approveSubmission}>
-                Approve
-              </button>
-              <button className="btn btn-danger" onClick={rejectSubmission}>
-                Reject
-              </button>
+      <div className="project-chat-container">
+        <div className="project-info">
+          <h3 className="project-title">{project.title}</h3>
+          <p>{project.description}</p>
+          {project.skills && project.skills.length > 0 && (
+            <div className="skills-section">
+              <h5>Required Skills</h5>
+              <ul className="skills-list">
+                {project.skills.map((skill, index) => (
+                  <li key={index}>{skill}</li>
+                ))}
+              </ul>
             </div>
-          ) : (
-            <p className="text-success mt-2">Submission Accepted</p>
+          )}
+          <p>Budget: ₹{project.budget}</p>
+          <p>Status: {project.status}</p>
+
+          {project.submission && (
+            <div className="submission-box">
+              <h4>Project Submission</h4>
+              <p>Description: {project.submissionDescription}</p>
+              <p>
+                Project Link:{" "}
+                <a href={project.projectLink} target="_blank" rel="noreferrer">
+                  {project.projectLink}
+                </a>
+              </p>
+              <p>
+                Manual Link:{" "}
+                <a href={project.manualLink} target="_blank" rel="noreferrer">
+                  {project.manualLink}
+                </a>
+              </p>
+              {!project.submissionAccepted ? (
+                <div className="action-buttons">
+                  <button
+                    className="btn btn-success"
+                    onClick={approveSubmission}
+                  >
+                    Approve
+                  </button>
+                  <button className="btn btn-danger" onClick={rejectSubmission}>
+                    Reject
+                  </button>
+                </div>
+              ) : (
+                <p className="text-success">Submission Accepted</p>
+              )}
+            </div>
           )}
         </div>
-      )}
 
-      <div className="chat-section mt-4">
-        <h5>Chat with Freelancer</h5>
-        <div className="chat-box">
-          {chats?.messages?.map((chat, i) => (
-            <div
-              className={`chat-message ${
-                chat.senderId === clientId ? "own" : ""
-              }`}
-              key={i}
-            >
-              <p>{chat.text}</p>
-              <span>{new Date(chat.time).toLocaleString()}</span>
-            </div>
-          ))}
-        </div>
-        <div className="chat-input">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Type your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button className="btn btn-primary mt-2" onClick={sendMessage}>
-            Send
-          </button>
+        <div className="chat-section">
+          <h5>Chat with Freelancer</h5>
+          <div className="chat-box">
+            {chats?.messages?.map((chat, i) => (
+              <div
+                key={i}
+                className={`chat-message ${
+                  chat.senderId === clientId ? "own" : ""
+                }`}
+              >
+                <p>{chat.text}</p>
+                <span>{new Date(chat.time).toLocaleString()}</span>
+              </div>
+            ))}
+          </div>
+          <div className="chat-input">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <button className="btn btn-primary mt-2" onClick={sendMessage}>
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -30,17 +30,7 @@
 }
 
 .projects-list {
-  width: 75%;
-  height: 82vh;
-
-  overflow-y: scroll;
-
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 0.7rem;
-  padding: 3vh 2vw;
-
-  display: flex;
-  flex-direction: column;
+  text-align: left;
 }
 
 .projects-list hr {
@@ -113,4 +103,115 @@
   padding: 20px;
   max-width: 100%;
   overflow-x: hidden;
+}
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.projects-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.filter-panel {
+  width: 220px;
+  border-right: 1px solid #ddd;
+}
+
+.filter-option {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.project-list-panel {
+  flex: 1;
+}
+
+.project-card {
+  border-bottom: 1px solid #ccc;
+  padding: 15px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.project-card:hover {
+  background-color: #f9f9f9;
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tag {
+  border: 1px solid salmon;
+  color: salmon;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.left-filter-box {
+  width: 40%;
+  margin: 20px 31px;
+  border-radius: 10px;
+  padding: 26px;
+  text-align: left;
+
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.left-filter-box h5 {
+  border-bottom: 1px solid grey;
+  margin: 10px 0;
+  padding: 10px 0;
+}
+.left-filter-box h6 {
+  margin: 15px 0;
+}
+.all-projects-container {
+  display: flex;
+  flex-direction: row;
+}
+.skills label {
+  margin: 0 10px;
+}
+.skills {
+  margin: 6px 0;
+}
+.projects-list-box {
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  margin: 20px 31px;
+  padding: 20px 36px;
+  text-align: left;
+  border-radius: 10px;
+  overflow-y: scroll;
+}
+.single-project-list {
+  margin: 19px 0;
+  border-bottom: 1px solid grey;
 }

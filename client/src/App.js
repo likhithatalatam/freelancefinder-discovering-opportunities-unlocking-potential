@@ -37,7 +37,8 @@ function App() {
         <Route path="/client" element={<Client />} />
         <Route path="/project-applications" element={<ProjectApplications />} />
         <Route path="/new-project" element={<NewProject />} />
-        <Route path="/client-project/:id" element={<ProjectWorking />} />
+        <Route path="/client/projects/:id" element={<ProjectWorking />} />
+        <Route path="/project/:id" element={<ProjectWorking />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin-projects" element={<AdminProjects />} />
         <Route path="/admin-applications" element={<AllApplications />} />

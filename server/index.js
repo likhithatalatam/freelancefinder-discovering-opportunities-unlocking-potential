@@ -87,36 +87,30 @@ mongoose
         res.status(500).json({ error: err.message });
       }
     });
-
     // ✅ FIXED: Update freelancer route
     app.post("/update-freelancer", async (req, res) => {
       try {
-        console.log("📥 Incoming Update Request Body:", req.body); // ✅ For debugging
+        console.log("📥 Incoming Update Request Body:", req.body);
 
         const { freelancerId, updateSkills, description } = req.body;
-
-        // ✅ Use `findOne` instead of `findById`
         const freelancer = await Freelancer.findOne({ userId: freelancerId });
 
         if (!freelancer) {
           return res.status(404).json({ error: "Freelancer not found" });
         }
 
-        // ✅ Update skills and description
         freelancer.skills = updateSkills.split(",").map((s) => s.trim());
         freelancer.description = description;
 
         await freelancer.save();
 
         console.log("✅ Freelancer updated:", freelancer);
-
         res.status(200).json(freelancer);
       } catch (err) {
         console.error("❌ Error in /update-freelancer:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
-
     // Projects
     app.get("/fetch-project/:id", async (req, res) => {
       try {
@@ -138,6 +132,8 @@ mongoose
 
     app.post("/new-project", async (req, res) => {
       try {
+        console.log("📥 New Project Payload:", req.body);
+
         const {
           title,
           description,
@@ -152,7 +148,12 @@ mongoose
           title,
           description,
           budget,
-          skills: skills.split(",").map((s) => s.trim()),
+          skills: Array.isArray(skills)
+            ? skills
+            : typeof skills === "string"
+            ? skills.split(",").map((s) => s.trim())
+            : [],
+
           clientId,
           clientName,
           clientEmail,
@@ -160,12 +161,14 @@ mongoose
         });
 
         await newProject.save();
+
+        console.log("✅ Project created:", newProject);
         res.status(200).json({ message: "Project created" });
       } catch (err) {
+        console.error("❌ Error creating project:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
-
     // Applications
     app.post("/make-bid", async (req, res) => {
       try {

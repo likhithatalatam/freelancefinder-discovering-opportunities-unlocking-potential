@@ -8,13 +8,14 @@ const Navbar = () => {
   const { logout } = useContext(GeneralContext) || {};
   const usertype = localStorage.getItem("usertype");
 
-  if (!usertype) {
-    return null; // No navbar if not logged in
-  }
+  if (!usertype) return null; // Hide navbar for unauthenticated users
 
   return (
     <div className="navbar">
-      <h3>SB Works{usertype === "admin" && " (Admin)"}</h3>
+      <h3 onClick={() => navigate("/")}>
+        SB Works {usertype === "admin" && "(Admin)"}
+      </h3>
+
       <div className="nav-options">
         {usertype === "freelancer" && (
           <>
@@ -24,15 +25,17 @@ const Navbar = () => {
             <p onClick={() => navigate("/my-applications")}>Applications</p>
           </>
         )}
+
         {usertype === "client" && (
           <>
             <p onClick={() => navigate("/client")}>Dashboard</p>
-            <p onClick={() => navigate("/new-project")}>New Project</p>
+            <p onClick={() => navigate("/new-project")}>Add Project</p>
             <p onClick={() => navigate("/project-applications")}>
               Applications
             </p>
           </>
         )}
+
         {usertype === "admin" && (
           <>
             <p onClick={() => navigate("/admin")}>Home</p>
@@ -41,6 +44,7 @@ const Navbar = () => {
             <p onClick={() => navigate("/admin-applications")}>Applications</p>
           </>
         )}
+
         <p onClick={logout}>Logout</p>
       </div>
     </div>

@@ -1,108 +1,46 @@
-import React, { useContext, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "../../styles/freelancer/ProjectData.css";
 import { GeneralContext } from "../../context/GeneralContext";
+import "../../styles/freelancer/ProjectData.css";
 
 const ProjectData = () => {
   const { socket } = useContext(GeneralContext);
-  const params = useParams();
-  const chatEndRef = useRef(null);
+  const { id: projectId } = useParams();
+  const userId = localStorage.getItem("userId");
 
   const [project, setProject] = useState({});
-  const [clientId, setClientId] = useState("");
-  const [freelancerId] = useState(localStorage.getItem("userId"));
-  const [projectId] = useState(params.id);
-  const [proposal, setProposal] = useState("");
-  const [bidAmount, setBidAmount] = useState(0);
-  const [estimatedTime, setEstimatedTime] = useState("");
-  const [projectLink, setProjectLink] = useState("");
-  const [manualLink, setManualLink] = useState("");
-  const [submissionDescription, setSubmissionDescription] = useState("");
-  const [message, setMessage] = useState("");
   const [chats, setChats] = useState([]);
+  const [message, setMessage] = useState("");
+  const [bidAmount, setBidAmount] = useState("");
+  const [estimatedTime, setEstimatedTime] = useState("");
+  const [proposal, setProposal] = useState("");
+
+  const isAssignedFreelancer = project?.freelancerId === userId;
+  const alreadyApplied = project?.bids?.includes(userId);
 
   useEffect(() => {
-    fetchProject(projectId);
-    if (socket) {
-      joinSocketRoom();
-      socket.on("message-from-user", fetchChats);
-    }
+    fetchProject();
     fetchChats();
-
-    return () => {
-      if (socket) socket.off("message-from-user");
-    };
-  }, [socket]);
+  }, []);
 
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chats]);
+    if (isAssignedFreelancer) {
+      socket.emit("join-chat-room", { projectId, freelancerId: userId });
+    }
+    socket.on("message-from-user", fetchChats);
+    return () => socket.off("message-from-user", fetchChats);
+  }, [project]);
 
-  const joinSocketRoom = () => {
-    socket.emit("join-chat-room", {
-      projectId,
-      freelancerId,
-    });
-  };
-
-  const fetchProject = async (id) => {
+  const fetchProject = async () => {
     try {
-      const res = await axios.get(`http://localhost:6001/fetch-project/${id}`);
+      const res = await axios.get(
+        `http://localhost:6001/fetch-project/${projectId}`
+      );
       setProject(res.data);
-      setClientId(res.data.clientId);
     } catch (err) {
-      console.error("❌ Error fetching project:", err);
+      console.error("Error fetching project", err);
     }
-  };
-
-  const handleBidding = async () => {
-    try {
-      await axios.post("http://localhost:6001/add-bid", {
-        projectId,
-        freelancerId,
-        bidAmount,
-        proposal,
-        estimatedTime,
-      });
-      setProposal("");
-      setBidAmount(0);
-      setEstimatedTime("");
-      alert("✅ Bidding successful!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Bidding failed!");
-    }
-  };
-
-  const handleProjectSubmission = async () => {
-    try {
-      await axios.post("http://localhost:6001/submit-project", {
-        projectId,
-        freelancerId,
-        projectLink,
-        manualLink,
-        description: submissionDescription,
-      });
-      setProjectLink("");
-      setManualLink("");
-      setSubmissionDescription("");
-      alert("✅ Submission successful!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Submission failed!");
-    }
-  };
-
-  const handleMessageSend = () => {
-    if (!message.trim()) return;
-    socket.emit("new-message", {
-      projectId,
-      senderId: freelancerId,
-      message,
-      time: new Date(),
-    });
-    setMessage("");
   };
 
   const fetchChats = async () => {
@@ -110,148 +48,125 @@ const ProjectData = () => {
       const res = await axios.get(
         `http://localhost:6001/fetch-chats/${projectId}`
       );
-      setChats(res.data);
+      setChats(res.data || []);
     } catch (err) {
-      console.error("❌ Failed to fetch chats:", err);
+      console.error("Error fetching chats", err);
+    }
+  };
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+    const time = new Date().toISOString();
+    socket.emit("new-message", {
+      projectId,
+      senderId: userId,
+      message,
+      time,
+    });
+    setMessage("");
+  };
+
+  const handleProposalSubmit = async () => {
+    try {
+      if (!bidAmount || !estimatedTime || !proposal) {
+        alert("Please fill all proposal fields.");
+        return;
+      }
+
+      await axios.post("http://localhost:6001/make-bid", {
+        clientId: project.clientId,
+        freelancerId: userId,
+        projectId,
+        proposal,
+        bidAmount,
+        estimatedTime,
+      });
+
+      alert("Proposal sent successfully!");
+      setBidAmount("");
+      setEstimatedTime("");
+      setProposal("");
+      fetchProject();
+    } catch (err) {
+      console.error("Failed to submit proposal", err);
+      alert("Proposal failed to send.");
     }
   };
 
   return (
-    <div className="project-data-page">
-      <div className="project-data-container">
-        {/* Project Info */}
-        <div className="project-data">
-          <h3>{project.title}</h3>
-          <p>{project.description}</p>
-          <span>
-            <h5>Required skills</h5>
-            <div className="required-skills">
-              {project.skills?.map((skill) => (
-                <p key={skill}>{skill}</p>
-              ))}
-            </div>
-          </span>
-          <span>
-            <h5>Budget</h5>
-            <h6>₹ {project.budget}</h6>
-          </span>
+    <div className="project-data-layout">
+      <div className="project-details-section">
+        <h3>{project.title}</h3>
+        <p>{project.description}</p>
+        <p>
+          <strong>Status:</strong> {project.status}
+        </p>
+        <p>
+          <strong>Budget:</strong> ₹{project.budget}
+        </p>
+        <div className="tag-container">
+          {project.skills?.map((s, i) => (
+            <span key={i} className="tag">
+              {s}
+            </span>
+          ))}
         </div>
 
-        {/* Bidding Section */}
-        {project.status === "Available" && (
-          <div className="project-form-body">
+        {!isAssignedFreelancer && !alreadyApplied && (
+          <div className="proposal-form">
             <h4>Send Proposal</h4>
-            <div className="form-floating mb-3">
+            <div className="proposal-grid">
               <input
-                type="number"
-                className="form-control"
-                placeholder="Bid Amount"
+                type="text"
+                placeholder="Budget"
                 value={bidAmount}
                 onChange={(e) => setBidAmount(e.target.value)}
               />
-              <label>Bid Amount (₹)</label>
-            </div>
-            <div className="form-floating mb-3">
               <input
                 type="text"
-                className="form-control"
-                placeholder="Estimated Time"
+                placeholder="Estimated time (days)"
                 value={estimatedTime}
                 onChange={(e) => setEstimatedTime(e.target.value)}
               />
-              <label>Estimated Time</label>
             </div>
-            <div className="form-floating mb-3">
-              <textarea
-                className="form-control"
-                placeholder="Proposal"
-                value={proposal}
-                onChange={(e) => setProposal(e.target.value)}
-              />
-              <label>Proposal</label>
-            </div>
-            <button className="btn btn-primary" onClick={handleBidding}>
-              Submit Proposal
-            </button>
-          </div>
-        )}
-
-        {/* Submission Section */}
-        {project.status === "Assigned" && (
-          <div className="project-form-body">
-            <h4>Submit Project</h4>
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Project Link"
-                value={projectLink}
-                onChange={(e) => setProjectLink(e.target.value)}
-              />
-              <label>Project Link</label>
-            </div>
-            <div className="form-floating mb-3">
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Manual Link"
-                value={manualLink}
-                onChange={(e) => setManualLink(e.target.value)}
-              />
-              <label>Manual/Documentation Link</label>
-            </div>
-            <div className="form-floating mb-3">
-              <textarea
-                className="form-control"
-                placeholder="Submission Description"
-                value={submissionDescription}
-                onChange={(e) => setSubmissionDescription(e.target.value)}
-              />
-              <label>Description</label>
-            </div>
-            <button
-              className="btn btn-success"
-              onClick={handleProjectSubmission}
-            >
-              Submit Work
-            </button>
-          </div>
-        )}
-
-        {/* Chat Section */}
-        <div className="chat-section">
-          <h4>Chat</h4>
-          <div className="chat-box">
-            {chats.map((chat, index) => (
-              <div
-                key={index}
-                className={`chat-message ${
-                  chat.senderId === freelancerId
-                    ? "my-message"
-                    : "their-message"
-                }`}
-              >
-                <p>{chat.message}</p>
-                <span>{new Date(chat.time).toLocaleString()}</span>
-              </div>
-            ))}
-            <div ref={chatEndRef}></div>
-          </div>
-          <div className="chat-input">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Type a message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
+            <textarea
+              rows={4}
+              placeholder="Describe your proposal"
+              value={proposal}
+              onChange={(e) => setProposal(e.target.value)}
             />
-            <button
-              className="btn btn-secondary mt-2"
-              onClick={handleMessageSend}
-            >
-              Send
-            </button>
+            <button onClick={handleProposalSubmit}>Submit Proposal</button>
           </div>
+        )}
+      </div>
+
+      <div className="project-chat-section">
+        <h5>Chat with the client</h5>
+        <div className="chat-box">
+          {chats?.messages?.map((msg, i) => (
+            <div
+              className={`chat-bubble ${msg.senderId === userId ? "own" : ""}`}
+              key={i}
+            >
+              <p>{msg.text}</p>
+              <span>{new Date(msg.time).toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+        <div className="chat-input-box">
+          {!isAssignedFreelancer && (
+            <p>Chat will be enabled if the project is assigned to you!!</p>
+          )}
+          <input
+            type="text"
+            placeholder="Type message..."
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            disabled={!isAssignedFreelancer}
+          />
+          <button onClick={sendMessage} disabled={!isAssignedFreelancer}>
+            Send
+          </button>
         </div>
       </div>
     </div>

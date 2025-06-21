@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import "../../styles/client/newproject.css";
 import { useNavigate } from "react-router-dom";
+import "../../styles/client/newproject.css";
 
 const NewProject = () => {
   const navigate = useNavigate();
@@ -11,79 +11,85 @@ const NewProject = () => {
   const [budget, setBudget] = useState("");
   const [skills, setSkills] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const clientId = localStorage.getItem("userId");
+    const clientName = localStorage.getItem("username");
+    const clientEmail = localStorage.getItem("email");
+
+    if (!title || !description || !budget || !skills) {
+      alert("Please fill all fields.");
+      return;
+    }
+
     try {
-      const response = await axios.post("http://localhost:6001/new-project", {
-        title: title.trim(),
-        description: description.trim(),
-        budget: Number(budget),
-        skills: skills.split(",").map((skill) => skill.trim()),
-        clientId: localStorage.getItem("userId"),
+      await axios.post("http://localhost:6001/new-project", {
+        title,
+        description,
+        budget,
+        skills: skills.split(",").map((s) => s.trim()), // ✅ Convert to array
+        clientId,
+        clientName,
+        clientEmail,
       });
 
-      if (response.data.message === "Project added") {
-        alert("Project added successfully");
-        navigate("/client");
-      } else {
-        alert("Project creation failed");
-      }
+      alert("✅ Project created successfully!");
+      navigate("/client", { state: { refresh: Date.now() } });
     } catch (err) {
-      console.error("Error submitting project:", err);
-      alert("Server error. Try again later.");
+      console.error("❌ Error creating project", err);
+      alert("❌ Failed to create project.");
     }
   };
 
   return (
     <div className="new-project-page">
-      <div className="new-project-form">
-        <h2>Post New Project</h2>
+      <h3>Post New Project</h3>
+      <form className="new-project-form" onSubmit={handleSubmit}>
+        <label>Project title</label>
+        <input
+          className="form-control"
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
 
-        <div className="form-control">
-          <label htmlFor="title">Project Title</label>
-          <input
-            type="text"
-            id="title"
-            placeholder="Enter project title"
-            onChange={(e) => setTitle(e.target.value)}
-          />
+        <label>Description</label>
+        <textarea
+          className="form-control"
+          rows="5"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+
+        <div className="row-fields">
+          <div className="form-group">
+            <label>Budget (in ₹)</label>
+            <input
+              type="number"
+              className="form-control"
+              value={budget}
+              onChange={(e) => setBudget(e.target.value)}
+              placeholder="Enter project budget"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Required Skills (comma separated)</label>
+            <input
+              type="text"
+              className="form-control"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              placeholder="e.g., React, Node.js"
+            />
+          </div>
         </div>
 
-        <div className="form-control">
-          <label htmlFor="description">Project Description</label>
-          <input
-            type="text"
-            id="description"
-            placeholder="Enter project description"
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
-
-        <div className="form-control">
-          <label htmlFor="budget">Project Budget</label>
-          <input
-            type="number"
-            id="budget"
-            placeholder="Enter budget"
-            onChange={(e) => setBudget(e.target.value)}
-          />
-        </div>
-
-        <div className="form-control">
-          <label htmlFor="skills">Required Skills</label>
-          <input
-            type="text"
-            id="skills"
-            placeholder="e.g., React, Node.js, MongoDB"
-            onChange={(e) => setSkills(e.target.value)}
-          />
-        </div>
-
-        <p>* Separate each skill with a comma (e.g., HTML, CSS, JS)</p>
-
-        <button type="button" onClick={handleSubmit}>
+        <button className="btn btn-primary mt-3" type="submit">
           Submit
         </button>
-      </div>
+      </form>
     </div>
   );
 };
