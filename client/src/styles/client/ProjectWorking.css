@@ -92,7 +92,11 @@
   display: flex;
   gap: 15px;
 }
-
+.project-working-page {
+  display: flex;
+  flex-direction: row;
+  margin: 30px;
+}
 .project-submission .submission-btns button {
   width: 20%;
 }
@@ -253,12 +257,13 @@
   margin-left: 37px;
 }
 .project-details-box {
-  width: 95%;
-  border: 1px solid grey;
+  width: 71%;
   padding: 21px;
-  margin: 38px;
+  /* margin: 38px; */
   border-radius: 10px;
   text-align: left;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Left */

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../../styles/freelancer/MyApplications.css";
 import axios from "axios";
+import "../../styles/freelancer/MyApplications.css";
 
 const MyApplications = () => {
   const [applications, setApplications] = useState([]);
+  const userId = localStorage.getItem("userId");
 
   useEffect(() => {
     fetchApplications();
@@ -11,68 +12,62 @@ const MyApplications = () => {
 
   const fetchApplications = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:6001/fetch-applications"
-      );
-      setApplications(response.data.reverse());
+      const res = await axios.get("http://localhost:6001/fetch-applications");
+      const myApps = res.data.filter((app) => app.freelancerId === userId);
+      setApplications(myApps.reverse());
     } catch (err) {
-      console.error("Error fetching applications:", err);
+      console.error("Error fetching applications", err);
     }
   };
 
-  const userId = localStorage.getItem("userId");
-
-  const filteredApplications = applications.filter(
-    (application) => application.freelancerId === userId
-  );
-
   return (
-    <div className="user-applications-page">
+    <div className="applications-page">
       <h3>My Applications</h3>
-      <div className="user-applications-body">
-        {filteredApplications.map((application) => (
-          <div className="user-application" key={application._id}>
-            <div className="user-application-body">
-              <div className="user-application-half">
-                <h4>{application.title}</h4>
-                <p>{application.description}</p>
-                <span>
-                  <h5>Required Skills</h5>
-                  <div className="application-skills">
-                    {application.requiredSkills?.map((skill) => (
-                      <p key={skill}>{skill}</p>
-                    ))}
-                  </div>
-                </span>
-                <h6>Project Budget - ₹ {application.budget}</h6>
+      <div className="applications-list">
+        {applications.map((app) => (
+          <div className="application-card" key={app._id}>
+            <div className="application-left">
+              <h3>{app.title}</h3>
+              <p>{app.description}</p>
+
+              <p>
+                <strong>Budget:</strong> ₹{app.budget}
+              </p>
+              <div className="skills">
+                <strong>Skills:</strong>
+                {app.requiredSkills.map((skill, i) => (
+                  <span key={i} className="skill-badge">
+                    {skill}
+                  </span>
+                ))}
               </div>
-              <div className="user-application-half">
-                <span>
-                  <h5>Your Proposal</h5>
-                  <p>{application.proposal}</p>
-                </span>
-                <span>
-                  <h5>Your Skills</h5>
-                  <div className="application-skills">
-                    {(application.freelancerSkills || []).map((skill) => (
-                      <p key={skill}>{skill}</p>
-                    ))}
-                  </div>
-                </span>
-                <span>
-                  <h6>Bid Amount - ₹ {application.bidAmount}</h6>
-                  <h6>
-                    Status: <b>{application.status}</b>
-                  </h6>
-                </span>
-                <hr />
+              <p>
+                <strong>Budget:</strong> ₹{app.budget}
+              </p>
+            </div>
+            <div className="application-right">
+              <h6>Proposal</h6>
+              <p>{app.proposal}</p>
+              <p>
+                <strong>Estimated Time:</strong> {app.estimatedTime}
+              </p>
+              <p>
+                <strong>Proposed Budget:</strong> ₹{app.bidAmount}
+              </p>
+              <div className="skills">
+                <strong>Skills:</strong>
+                {app.freelancerSkills.map((skill, i) => (
+                  <span key={i} className="skill-badge">
+                    {skill}
+                  </span>
+                ))}
               </div>
+              <p>
+                <strong>Status:</strong> {app.status}
+              </p>
             </div>
           </div>
         ))}
-        {filteredApplications.length === 0 && (
-          <p className="text-center">No applications found.</p>
-        )}
       </div>
     </div>
   );

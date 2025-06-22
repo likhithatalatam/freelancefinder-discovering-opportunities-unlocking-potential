@@ -267,28 +267,48 @@ mongoose
     });
 
     // Submission
+    // ✅ Submit Project (Freelancer)
     app.post("/submit-project", async (req, res) => {
       try {
         const { projectId, projectLink, manualLink, submissionDescription } =
           req.body;
         const project = await Project.findById(projectId);
+
+        if (!project)
+          return res.status(404).json({ error: "Project not found" });
+
+        if (project.submissionAccepted) {
+          return res
+            .status(400)
+            .json({ error: "Submission already accepted. Cannot resubmit." });
+        }
+
         project.projectLink = projectLink;
         project.manualLink = manualLink;
         project.submissionDescription = submissionDescription;
         project.submission = true;
+
         await project.save();
-        res.status(200).json({ message: "Submission received" });
+
+        res.status(200).json({ message: "✅ Submission saved" });
       } catch (err) {
+        console.error("❌ Error saving submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
 
+    // ✅ Approve Submission (Client)
     app.get("/approve-submission/:id", async (req, res) => {
       try {
         const project = await Project.findById(req.params.id);
         const freelancer = await Freelancer.findOne({
           userId: project.freelancerId,
         });
+
+        if (!project || !freelancer)
+          return res
+            .status(404)
+            .json({ error: "Project or freelancer not found" });
 
         project.submissionAccepted = true;
         project.status = "Completed";
@@ -300,22 +320,34 @@ mongoose
 
         await project.save();
         await freelancer.save();
-        res.status(200).json({ message: "Submission approved" });
+
+        res.status(200).json({ message: "✅ Submission approved" });
       } catch (err) {
+        console.error("❌ Error approving submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
 
+    // ❌ Reject Submission (Client)
     app.get("/reject-submission/:id", async (req, res) => {
       try {
         const project = await Project.findById(req.params.id);
+        if (!project)
+          return res.status(404).json({ error: "Project not found" });
+
         project.submission = false;
         project.projectLink = "";
         project.manualLink = "";
         project.submissionDescription = "";
+        project.submissionAccepted = false;
+
         await project.save();
-        res.status(200).json({ message: "Submission rejected" });
+
+        res.status(200).json({
+          message: "❌ Submission rejected, freelancer may resubmit.",
+        });
       } catch (err) {
+        console.error("❌ Error rejecting submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });

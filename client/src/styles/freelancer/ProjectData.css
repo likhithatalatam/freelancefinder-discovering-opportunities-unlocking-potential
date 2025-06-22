@@ -55,13 +55,13 @@
   outline: none;
 }
 .proposal-form button {
-  width: 100%;
   margin: 24px 0;
-  padding: 10px;
-  border: 1px solid orange;
+  padding: 10px 30px;
   background: none;
-  color: orange;
-  border-radius: 10px;
+  color: white;
+  border-radius: 5px;
+  background-color: green;
+  border: none;
 }
 .proposal-form button:hover {
   background-color: orange;
@@ -139,6 +139,7 @@
   padding-bottom: 4vh;
   border-top: 1px solid grey;
   margin: 20px 0;
+  padding: 15px;
 }
 
 .chat-messages::-webkit-scrollbar {
@@ -305,15 +306,14 @@
 
 .submission-form {
   margin-top: 2rem;
-  background-color: #f9f9f9;
+
   padding: 1.5rem;
-  border: 1px solid #ddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 }
 
 .submission-form h5 {
   margin-bottom: 1rem;
-  color: #227396;
 }
 
 .submission-form label {
@@ -323,7 +323,8 @@
 
 .submission-form input,
 .submission-form textarea {
-  margin-bottom: 1rem;
+  margin: 20px 0 !important;
+  padding: 13px;
 }
 .project-data-page {
   max-width: 800px;
@@ -345,7 +346,16 @@
 .chat-section {
   margin-top: 30px;
 }
-
+.project-chat-box {
+  width: 30%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 22px;
+  height: 100%;
+  border-radius: 10px;
+}
+.project-chat-box h5 {
+  text-align: center;
+}
 .chat-box {
   max-height: 300px;
   overflow-y: auto;
@@ -355,7 +365,13 @@
   border: 1px solid #ccc;
   margin: 10px;
 }
-
+.chat-input-box {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  padding: 18px 0px;
+  border-top: 1px solid grey;
+}
 .chat-message {
   background-color: #e8f0fe;
   padding: 10px;
@@ -427,8 +443,8 @@
   padding: 20px;
 }
 .project-details-box {
-  display: flex;
-  flex-direction: row;
+  /* display: flex;
+  flex-direction: row; */
 }
 
 .project-layout {
@@ -543,7 +559,8 @@
 }
 .project-data-wrapper {
   width: 95%;
-
+  display: flex;
+  flex-direction: row;
   margin: 38px;
   border-radius: 10px;
   text-align: left;

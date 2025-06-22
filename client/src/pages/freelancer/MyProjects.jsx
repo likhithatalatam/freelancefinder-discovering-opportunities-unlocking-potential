@@ -51,46 +51,48 @@ const MyProjects = () => {
     <div className="client-projects-page">
       <div className="client-projects-list">
         <div className="client-projects-header">My Projects</div>
+
         <select
-          className="form-control"
+          className="form-control my-2"
           onChange={(e) => handleFilterChange(e.target.value)}
         >
           <option value="">Choose project status</option>
           <option value="In Progress">In Progress</option>
           <option value="Completed">Completed</option>
         </select>
-      </div>
-      <hr />
 
-      <div className="projects-display">
-        {error ? (
-          <p className="error-text">{error}</p>
-        ) : displayProjects.length > 0 ? (
-          displayProjects.map((project) => (
-            <div
-              className="listed-project"
-              key={project._id}
-              onClick={() => navigate(`/project/${project._id}`)}
-            >
-              <div className="listed-project-head">
-                <h3>{project.title}</h3>
-                <p>{new Date(project.postedDate).toLocaleString()}</p>
+        <hr />
+
+        <div className="projects-display">
+          {error ? (
+            <p className="error-text">{error}</p>
+          ) : displayProjects.length > 0 ? (
+            displayProjects.map((project) => (
+              <div
+                className="listed-project"
+                key={project._id}
+                onClick={() => navigate(`/project/${project._id}`)}
+              >
+                <div className="listed-project-head">
+                  <h3>{project.title}</h3>
+                  <p>{new Date(project.postedDate).toLocaleString()}</p>
+                </div>
+                <h5>Status: {project.status}</h5>
+                <h5>Budget: ₹ {project.budget}</h5>
+                <p>{project.description}</p>
+                <div className="skills">
+                  {project.skills?.map((skill) => (
+                    <h6 key={skill}>{skill}</h6>
+                  ))}
+                </div>
               </div>
-              <h5>Status: {project.status}</h5>
-              <h5>Budget: ₹ {project.budget}</h5>
-              <p>{project.description}</p>
-              <div className="skills">
-                {project.skills?.map((skill) => (
-                  <h6 key={skill}>{skill}</h6>
-                ))}
-              </div>
+            ))
+          ) : (
+            <div className="no-projects-box">
+              <p>No projects found.</p>
             </div>
-          ))
-        ) : (
-          <div className="no-projects-box">
-            <p>No projects found.</p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

@@ -35,20 +35,20 @@ const ProjectApplications = () => {
   const handleApprove = async (id) => {
     try {
       await axios.get(`http://localhost:6001/approve-application/${id}`);
-      alert("Application approved");
+      alert("✅ Application approved");
       fetchApplications();
     } catch (err) {
-      alert("Operation failed!");
+      alert("❌ Operation failed!");
     }
   };
 
   const handleReject = async (id) => {
     try {
       await axios.get(`http://localhost:6001/reject-application/${id}`);
-      alert("Application rejected");
+      alert("❌ Application rejected");
       fetchApplications();
     } catch (err) {
-      alert("Operation failed!");
+      alert("❌ Operation failed!");
     }
   };
 
@@ -85,60 +85,70 @@ const ProjectApplications = () => {
       {displayApplications.length > 0 ? (
         displayApplications.map((application, idx) => (
           <div className="application-card" key={idx}>
+            {/* Left Side: Project Details */}
             <div className="client-application-half">
+              <h5>{application.title}</h5>
               <p>
-                <strong>Title:</strong> {application.title}
+                <strong>Description:</strong> {application.description}
               </p>
               <p>
-                <strong>Name:</strong> {application.name}
+                <strong>Status:</strong> {application.status}
               </p>
               <p>
-                <strong>Email:</strong> {application.email}
-              </p>
-              <p>
-                <strong>Phone:</strong> {application.phone}
-              </p>
-              <p>
-                <strong>Address:</strong> {application.address}
-              </p>
-              <h6>
                 <strong>Budget:</strong> ₹{application.budget}
-              </h6>
+              </p>
+              <p>
+                <strong>Required Skills:</strong>
+              </p>
+              <ul>
+                {application.requiredSkills?.map((skill, i) => (
+                  <li key={i}>{skill}</li>
+                ))}
+              </ul>
             </div>
 
             <div className="vertical-line"></div>
 
+            {/* Right Side: Freelancer Proposal */}
             <div className="client-application-half">
-              <span>
-                <h5>Proposal</h5>
-                <p>{application.proposal}</p>
-              </span>
+              <h5>Proposal by {application.freelancerName}</h5>
+              <p>
+                <strong>Email:</strong> {application.freelancerEmail}
+              </p>
+              <p>
+                <strong>Estimated Time:</strong> {application.estimatedTime}
+              </p>
+              <p>
+                <strong>Proposal:</strong> {application.proposal}
+              </p>
+              <h6>
+                <strong>Bid Amount:</strong> ₹{application.bidAmount}
+              </h6>
+              <p>
+                <strong>Skills:</strong>
+              </p>
+              <div className="application-skills">
+                {application.freelancerSkills?.map((skill, i) => (
+                  <span key={i} className="skill-tag">
+                    {skill}
+                  </span>
+                ))}
+              </div>
 
-              <span>
-                <h5>Skills</h5>
-                <div className="application-skills">
-                  {application.freelancerSkills?.map((skill, i) => (
-                    <p key={i}>{skill}</p>
-                  ))}
-                </div>
-              </span>
-
-              <h6>Proposed Budget: ₹{application.bidAmount}</h6>
-
-              <div className="approve-btns">
+              <div className="approve-btns mt-2">
                 {application.status === "Pending" ? (
                   <>
                     <button
                       className="btn btn-success"
                       onClick={() => handleApprove(application._id)}
                     >
-                      Approve
+                      ✅ Approve
                     </button>
                     <button
-                      className="btn btn-danger"
+                      className="btn btn-danger ms-2"
                       onClick={() => handleReject(application._id)}
                     >
-                      Decline
+                      ❌ Reject
                     </button>
                   </>
                 ) : (
