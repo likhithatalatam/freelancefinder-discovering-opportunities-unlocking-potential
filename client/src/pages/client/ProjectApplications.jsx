@@ -35,20 +35,20 @@ const ProjectApplications = () => {
   const handleApprove = async (id) => {
     try {
       await axios.get(`http://localhost:6001/approve-application/${id}`);
-      alert("✅ Application approved");
+      alert("Application approved");
       fetchApplications();
     } catch (err) {
-      alert("❌ Operation failed!");
+      alert("Operation failed!");
     }
   };
 
   const handleReject = async (id) => {
     try {
       await axios.get(`http://localhost:6001/reject-application/${id}`);
-      alert("❌ Application rejected");
+      alert("Application rejected");
       fetchApplications();
     } catch (err) {
-      alert("❌ Operation failed!");
+      alert("Operation failed!");
     }
   };
 
@@ -89,22 +89,24 @@ const ProjectApplications = () => {
             <div className="client-application-half">
               <h5>{application.title}</h5>
               <p>
-                <strong>Description:</strong> {application.description}
+                <strong></strong> {application.description}
               </p>
-              <p>
+              {/* <p>
                 <strong>Status:</strong> {application.status}
-              </p>
+              </p> */}
               <p>
-                <strong>Budget:</strong> ₹{application.budget}
+                <strong>Required Skills</strong>
               </p>
-              <p>
-                <strong>Required Skills:</strong>
-              </p>
-              <ul>
+              <div className="skill-list-span">
                 {application.requiredSkills?.map((skill, i) => (
-                  <li key={i}>{skill}</li>
+                  <span className="skill-tag" key={i}>
+                    {skill}
+                  </span>
                 ))}
-              </ul>
+              </div>
+              <p className="status-p">
+                <strong>Budget - </strong> ₹{application.budget}
+              </p>
             </div>
 
             <div className="vertical-line"></div>
@@ -112,18 +114,15 @@ const ProjectApplications = () => {
             {/* Right Side: Freelancer Proposal */}
             <div className="client-application-half">
               <h5>Proposal by {application.freelancerName}</h5>
-              <p>
+              {/* <p>
                 <strong>Email:</strong> {application.freelancerEmail}
-              </p>
-              <p>
+              </p> */}
+              {/* <p>
                 <strong>Estimated Time:</strong> {application.estimatedTime}
-              </p>
+              </p> */}
               <p>
-                <strong>Proposal:</strong> {application.proposal}
+                <strong></strong> {application.proposal}
               </p>
-              <h6>
-                <strong>Bid Amount:</strong> ₹{application.bidAmount}
-              </h6>
               <p>
                 <strong>Skills:</strong>
               </p>
@@ -135,6 +134,10 @@ const ProjectApplications = () => {
                 ))}
               </div>
 
+              <h6>
+                <strong>Proposed Budget - </strong> ₹{application.bidAmount}
+              </h6>
+
               <div className="approve-btns mt-2">
                 {application.status === "Pending" ? (
                   <>
@@ -142,13 +145,13 @@ const ProjectApplications = () => {
                       className="btn btn-success"
                       onClick={() => handleApprove(application._id)}
                     >
-                      ✅ Approve
+                      Approve
                     </button>
                     <button
                       className="btn btn-danger ms-2"
                       onClick={() => handleReject(application._id)}
                     >
-                      ❌ Reject
+                      Reject
                     </button>
                   </>
                 ) : (

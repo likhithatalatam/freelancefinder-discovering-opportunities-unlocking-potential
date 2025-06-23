@@ -72,7 +72,7 @@ const ProjectData = () => {
       manualLink: manual,
       submissionDescription: description,
     });
-    alert("✅ Project submitted successfully!");
+    alert("Project submitted successfully!");
     fetchProject();
   };
 
@@ -86,10 +86,10 @@ const ProjectData = () => {
         bidAmount,
         estimatedTime,
       });
-      alert("✅ Proposal sent successfully!");
+      alert("Proposal sent successfully!");
       fetchProject();
     } catch (err) {
-      alert("❌ Proposal failed.");
+      alert("Proposal failed.");
       console.error(err);
     }
   };
@@ -100,12 +100,10 @@ const ProjectData = () => {
       <div className="project-details-box">
         <h3>{project.title}</h3>
         <p>{project.description}</p>
-        <p>Status: {project.status}</p>
-        <p>Budget: ₹{project.budget}</p>
 
         {project.skills?.length > 0 && (
           <div className="skills-list">
-            <strong>Required Skills:</strong>
+            <strong>Required Skills</strong>
             <ul>
               {project.skills.map((s, i) => (
                 <li key={i}>{s}</li>
@@ -113,27 +111,32 @@ const ProjectData = () => {
             </ul>
           </div>
         )}
+        <p className="p">
+          Budget <br /> ₹{project.budget}
+        </p>
 
         {/* 📝 Proposal Form - Visible only if not assigned */}
         {!isAssignedFreelancer && (
           <div className="proposal-form mt-3">
             <h5>Submit Proposal</h5>
-            <input
-              type="number"
-              placeholder="Your Bid (₹)"
-              value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
-              className="form-control my-1"
-              disabled={alreadyApplied}
-            />
-            <input
-              type="text"
-              placeholder="Estimated Time (e.g., 3 days)"
-              value={estimatedTime}
-              onChange={(e) => setEstimatedTime(e.target.value)}
-              className="form-control my-1"
-              disabled={alreadyApplied}
-            />
+            <div className="inputs">
+              <input
+                type="number"
+                placeholder="Your Bid (₹)"
+                value={bidAmount}
+                onChange={(e) => setBidAmount(e.target.value)}
+                className="form-control my-1"
+                disabled={alreadyApplied}
+              />
+              <input
+                type="text"
+                placeholder="Estimated Time (e.g., 3 days)"
+                value={estimatedTime}
+                onChange={(e) => setEstimatedTime(e.target.value)}
+                className="form-control my-1"
+                disabled={alreadyApplied}
+              />
+            </div>
             <textarea
               rows="3"
               placeholder="Describe your proposal"
@@ -151,7 +154,7 @@ const ProjectData = () => {
             </button>
             {alreadyApplied && (
               <p className="text-muted mt-1">
-                ✅ Already applied to this project.
+                Already applied to this project.
               </p>
             )}
           </div>
@@ -159,21 +162,48 @@ const ProjectData = () => {
 
         {/* 📤 Submission Form - Only if assigned */}
         {isAssignedFreelancer && (
-          <>
+          <div className="submission-form mt-4">
+            <h5>Submit Project</h5>
+
             {project.submissionAccepted ? (
-              <p className="text-success mt-3">
-                ✅ Project marked completed by client.
+              <p className="text-success mt-2">
+                Project marked completed by client.
               </p>
+            ) : project.submission ? (
+              <>
+                <input
+                  type="text"
+                  placeholder="Project Link"
+                  value=""
+                  className="form-control my-1"
+                  disabled
+                />
+                <input
+                  type="text"
+                  placeholder="Manual Link"
+                  value=""
+                  className="form-control my-1"
+                  disabled
+                />
+                <textarea
+                  rows="3"
+                  placeholder="Describe your work"
+                  value=""
+                  className="form-control my-1"
+                  disabled
+                />
+                <button className="btn btn-secondary" disabled>
+                  Already submitted. Awaiting approval.
+                </button>
+              </>
             ) : (
-              <div className="submission-form mt-4">
-                <h5>Submit Project</h5>
+              <>
                 <input
                   type="text"
                   placeholder="Project Link"
                   value={link}
                   onChange={(e) => setLink(e.target.value)}
                   className="form-control my-1"
-                  disabled={project.submission}
                 />
                 <input
                   type="text"
@@ -181,7 +211,6 @@ const ProjectData = () => {
                   value={manual}
                   onChange={(e) => setManual(e.target.value)}
                   className="form-control my-1"
-                  disabled={project.submission}
                 />
                 <textarea
                   rows="3"
@@ -189,23 +218,16 @@ const ProjectData = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="form-control my-1"
-                  disabled={project.submission}
                 />
                 <button
                   className="btn btn-success"
                   onClick={handleSubmitProject}
-                  disabled={project.submission}
                 >
                   Submit Project
                 </button>
-                {project.submission && (
-                  <p className="text-muted mt-2">
-                    ✅ Submitted. Waiting for approval by client.
-                  </p>
-                )}
-              </div>
+              </>
             )}
-          </>
+          </div>
         )}
       </div>
 
@@ -213,41 +235,39 @@ const ProjectData = () => {
       <div className="project-chat-box">
         <h5>Chat with Client</h5>
         <div className="chat-messages">
-          {chats?.messages?.map((chat, i) => (
-            <div
-              key={i}
-              className={`chat-message ${
-                chat.senderId === userId ? "own" : ""
-              }`}
-            >
-              <p>{chat.text}</p>
-              <span>{new Date(chat.time).toLocaleString()}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="chat-input-box">
           {!isAssignedFreelancer && (
             <p className="text-muted">
-              ❌ You are not assigned to this project.
+              <i>Chat will be enabled if the project is assigned to you!!</i>
             </p>
           )}
-          <input
-            type="text"
-            placeholder="Type a message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="form-control"
-            disabled={!isAssignedFreelancer}
-          />
-          <button
-            onClick={sendMessage}
-            className="btn btn-primary mt-2"
-            disabled={!isAssignedFreelancer}
-          >
-            Send
-          </button>
+          {isAssignedFreelancer &&
+            chats?.messages?.map((chat, i) => (
+              <div
+                key={i}
+                className={`chat-message ${
+                  chat.senderId === userId ? "own" : ""
+                }`}
+              >
+                <p>{chat.text}</p>
+                <span>{new Date(chat.time).toLocaleString()}</span>
+              </div>
+            ))}
         </div>
+
+        {isAssignedFreelancer && (
+          <div className="chat-input-box">
+            <input
+              type="text"
+              placeholder="Type a message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="form-control"
+            />
+            <button onClick={sendMessage} className="btn">
+              Send
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

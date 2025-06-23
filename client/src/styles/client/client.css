@@ -76,12 +76,16 @@
 }
 
 .listed-project .skills h6 {
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 400;
   color: #ee4950;
   border: 1px solid #ee4950;
-  padding: 5px 10px;
-  border-radius: 1rem;
+  padding: 8px 11px;
+  border-radius: 21px;
+}
+.listed-project {
+  border-bottom: 1px solid grey;
+  margin: 19px 0;
 }
 
 .listed-project .bids-data {
@@ -90,11 +94,6 @@
   margin-top: 3vh;
 }
 
-.listed-project .bids-data p {
-}
-
-.listed-project .bids-data h6 {
-}
 .client-projects-page {
   padding: 20px;
   margin: 5px;

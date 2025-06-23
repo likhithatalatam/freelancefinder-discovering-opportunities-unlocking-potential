@@ -9,9 +9,6 @@
   margin-bottom: 4vh;
 }
 
-.new-project-form {
-}
-
 .new-project-form input {
   margin: 10px 0px;
   padding: 10px;
@@ -25,12 +22,6 @@
   display: grid;
   grid-template-columns: 31% 67%;
   justify-content: space-between;
-}
-
-.new-project-form span input {
-}
-
-.new-project-form span p {
 }
 
 .new-project-form button {

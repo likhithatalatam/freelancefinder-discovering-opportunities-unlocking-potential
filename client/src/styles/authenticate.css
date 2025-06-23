@@ -18,6 +18,12 @@
   z-index: 999;
   background-color: #fff;
 }
+/* .mb-3 .form-control {
+  padding-top: 1rem 0.75rem !important;
+} */
+.mb-3 .form-control {
+  padding-top: 1.625rem !important;
+}
 
 .auth-navbar h3 {
   font-family: "Kaushan Script", cursive;

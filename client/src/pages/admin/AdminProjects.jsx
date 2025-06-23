@@ -86,33 +86,36 @@ const AdminProjects = () => {
           )}
         </div>
       </div>
-
-      <div className="projects-list">
-        <h3>All Projects</h3>
-        <hr />
-        {displayProjects.map((project) => (
-          <div className="listed-project" key={project._id}>
-            <div className="listed-project-head">
-              <h3>{project.title}</h3>
-              <p>
-                {new Date(project.postedDate).toLocaleDateString("en-IN", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </p>
+      <div className="admin">
+        <div className="projects-list">
+          <h3>All Projects</h3>
+          <hr />
+          {displayProjects.map((project) => (
+            <div className="listed-project" key={project._id}>
+              <div className="listed-project-head">
+                <h3>{project.title}</h3>
+                <p>
+                  {new Date(project.postedDate).toLocaleDateString("en-IN", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </p>
+              </div>
+              <h5>Budget ₹ {project.budget}</h5>
+              <h5>Client Name: {project.clientName}</h5>
+              <h5>Client Email: {project.clientEmail}</h5>
+              <p>{project.description}</p>
+              <div className="skills">
+                {project.skills?.map((skill) => (
+                  <h6 key={skill}>{skill}</h6>
+                ))}
+              </div>
+              <h5>Budget: ₹ {project.budget}</h5>
+              <h5 className="last">Status: {project.status}</h5>
             </div>
-            <h5>Budget ₹ {project.budget}</h5>
-            <h5>Client Name: {project.clientName}</h5>
-            <h5>Client Email: {project.clientEmail}</h5>
-            <p>{project.description}</p>
-            <div className="skills">
-              {project.skills?.map((skill) => (
-                <h6 key={skill}>{skill}</h6>
-              ))}
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

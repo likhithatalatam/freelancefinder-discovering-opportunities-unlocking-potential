@@ -1,8 +1,9 @@
 .user-applications-page {
   padding: 2vh 2vw;
 }
-
 .user-applications-page h3 {
+  text-align: left;
+  margin: 10px 0;
 }
 
 .user-applications-body {
@@ -43,11 +44,12 @@
 
 .user-application-half {
   width: 48%;
+  text-align: left;
 }
 
 .user-application-half h4 {
-  font-size: 1.2rem;
-  color: rgba(26, 83, 121, 0.646);
+  font-size: 1.4rem;
+  color: cadetblue;
 }
 
 .user-application-half p {
@@ -58,8 +60,8 @@
 }
 
 .user-application-half span h5 {
-  font-size: 1.1rem;
-  color: rgba(9, 55, 86, 0.877);
+  font-size: 1.4rem;
+  color: cadetblue;
 }
 
 .user-application-half span p {
@@ -73,9 +75,9 @@
 .user-application-half span .application-skills p {
   color: #ee4950;
   border: 1px solid #ee4950;
-  padding: 5px 10px;
-  border-radius: 1rem;
-  font-size: 0.6rem;
+  padding: 8px 13px;
+  border-radius: 2rem;
+  font-size: 0.8rem;
 }
 
 .user-application-half h6 {

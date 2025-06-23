@@ -94,43 +94,45 @@ const AllProjects = () => {
       </div>
 
       <div className="projects-list-box">
-        <h2 className="text-center">All Projects</h2>
-        <input
-          type="text"
-          className="form-control my-3"
-          placeholder="Search by title or description..."
-          value={search}
-          onChange={handleSearch}
-        />
+        <div className="scroll">
+          <h2 className="text">All Projects</h2>
+          {/* <input
+            type="text"
+            className="form-control my-3"
+            placeholder="Search by title or description..."
+            value={search}
+            onChange={handleSearch}
+          /> */}
 
-        {filteredProjects.length > 0 ? (
-          filteredProjects.map((project) => (
-            <div
-              key={project._id}
-              className="single-project-list"
-              onClick={() => navigate(`/project/${project._id}`)}
-            >
-              <h5 style={{ color: "steelblue" }}>{project.title}</h5>
-              <p className="text-muted">
-                {new Date(project.postedDate).toLocaleString()}
-              </p>
-              <p>{project.description}</p>
-              <div className="skill-tags">
-                {project.skills.map((skill) => (
-                  <span key={skill} className="skill-pill">
-                    {skill}
-                  </span>
-                ))}
+          {filteredProjects.length > 0 ? (
+            filteredProjects.map((project) => (
+              <div
+                key={project._id}
+                className="single-project-list"
+                onClick={() => navigate(`/project/${project._id}`)}
+              >
+                <h5 style={{ color: "steelblue" }}>{project.title}</h5>
+                <p className="text-muted">
+                  {new Date(project.postedDate).toLocaleString()}
+                </p>
+                <p>{project.description}</p>
+                <div className="skill-tags">
+                  {project.skills.map((skill) => (
+                    <span key={skill} className="skill-pill">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+                <p className="text-muted">
+                  <strong>Status:</strong> {project.status} |{" "}
+                  <strong>Budget:</strong> ₹{project.budget}
+                </p>
               </div>
-              <p className="text-muted">
-                <strong>Status:</strong> {project.status} |{" "}
-                <strong>Budget:</strong> ₹{project.budget}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p>No matching projects found.</p>
-        )}
+            ))
+          ) : (
+            <p>No matching projects found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

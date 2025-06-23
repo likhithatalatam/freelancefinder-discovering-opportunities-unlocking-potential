@@ -42,5 +42,5 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-// ✅ Add this line
+// Add this line
 export default UserProvider;

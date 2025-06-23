@@ -25,7 +25,7 @@ const MyProjects = () => {
       setDisplayProjects([...userProjects].reverse());
     } catch (err) {
       console.error(err);
-      setError("❌ Failed to fetch projects. Please try again.");
+      setError("Failed to fetch projects. Please try again.");
     }
   };
 
@@ -43,24 +43,25 @@ const MyProjects = () => {
           .reverse()
       );
     } else {
-      setError("⚠️ Invalid project status selected.");
+      setError("Invalid project status selected.");
     }
   };
 
   return (
     <div className="client-projects-page">
       <div className="client-projects-list">
-        <div className="client-projects-header">My Projects</div>
+        <div className="project-head">
+          <div className="client-projects-header">My Projects</div>
 
-        <select
-          className="form-control my-2"
-          onChange={(e) => handleFilterChange(e.target.value)}
-        >
-          <option value="">Choose project status</option>
-          <option value="In Progress">In Progress</option>
-          <option value="Completed">Completed</option>
-        </select>
-
+          <select
+            className="form-control my-2"
+            onChange={(e) => handleFilterChange(e.target.value)}
+          >
+            <option value="">Choose project status</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
         <hr />
 
         <div className="projects-display">

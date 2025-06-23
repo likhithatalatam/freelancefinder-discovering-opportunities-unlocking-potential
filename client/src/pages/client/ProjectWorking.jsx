@@ -52,15 +52,17 @@ const ProjectWorking = () => {
 
   const approveSubmission = async () => {
     await axios.get(`http://localhost:6001/approve-submission/${projectId}`);
-    alert("✅ Submission approved. Project marked completed.");
+    alert("Submission approved. Project marked completed.");
     fetchProject();
   };
 
   const rejectSubmission = async () => {
     await axios.get(`http://localhost:6001/reject-submission/${projectId}`);
-    alert("❌ Submission rejected. Freelancer can resubmit.");
+    alert("Submission rejected. Freelancer can resubmit.");
     fetchProject();
   };
+
+  const isChatEnabled = ["Assigned", "Completed"].includes(project.status);
 
   return (
     <div className="project-working-page">
@@ -82,17 +84,14 @@ const ProjectWorking = () => {
           </div>
         )}
 
-        {/* ✅ Submission Section (ONLY IF ASSIGNED) */}
-        {project.status === "Assigned" || project.status === "Completed" ? (
+        {/* ✅ Submission Section */}
+        {isChatEnabled && (
           <div className="submission-box mt-3">
-            <h5>Project Submission</h5>
+            <h5>Submission</h5>
             {!project.submission ? (
-              <p className="text-muted">⚠️ No submissions yet.</p>
+              <p className="text-muted">No submissions yet.</p>
             ) : (
               <>
-                <p>
-                  <strong>Description:</strong> {project.submissionDescription}
-                </p>
                 <p>
                   <strong>Project Link:</strong>{" "}
                   <a
@@ -109,30 +108,31 @@ const ProjectWorking = () => {
                     {project.manualLink}
                   </a>
                 </p>
-
+                <p>
+                  <strong>Description for work</strong> <br />{" "}
+                  {project.submissionDescription}
+                </p>
                 {!project.submissionAccepted ? (
                   <div className="action-buttons mt-2">
                     <button
                       className="btn btn-success me-2"
                       onClick={approveSubmission}
                     >
-                      ✅ Approve
+                      Approve
                     </button>
                     <button
                       className="btn btn-danger"
                       onClick={rejectSubmission}
                     >
-                      ❌ Reject
+                      Reject
                     </button>
                   </div>
                 ) : (
-                  <p className="text-success mt-2">🎉 Submission Approved</p>
+                  <p className="text-success mt-2">Submission Approved</p>
                 )}
               </>
             )}
           </div>
-        ) : (
-          <></>
         )}
       </div>
 
@@ -140,41 +140,40 @@ const ProjectWorking = () => {
       <div className="project-chat-box">
         <h5>Chat with Freelancer</h5>
         <div className="chat-messages">
-          {chats?.messages?.map((chat, i) => (
-            <div
-              key={i}
-              className={`chat-message ${
-                chat.senderId === userId ? "own" : ""
-              }`}
-            >
-              <p>{chat.text}</p>
-              <span>{new Date(chat.time).toLocaleString()}</span>
-            </div>
-          ))}
+          {!isChatEnabled ? (
+            <p className="text-muted text-center mt-2">
+              <i>Chat will be enabled if the project is assigned..</i>
+            </p>
+          ) : (
+            chats?.messages?.map((chat, i) => (
+              <div
+                key={i}
+                className={`chat-message ${
+                  chat.senderId === userId ? "own" : ""
+                }`}
+              >
+                <p>{chat.text}</p>
+                <span>{new Date(chat.time).toLocaleString()}</span>
+              </div>
+            ))
+          )}
         </div>
 
-        <div className="chat-input-box">
-          {project.status !== "Assigned" && (
-            <p className="text-muted">
-              ❌ Chat disabled. Project not assigned.
-            </p>
-          )}
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Type your message..."
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            disabled={project.status !== "Assigned"}
-          />
-          <button
-            className="btn btn-primary mt-2"
-            onClick={sendMessage}
-            disabled={project.status !== "Assigned"}
-          >
-            Send
-          </button>
-        </div>
+        {/* Input box only shown when chat is enabled */}
+        {isChatEnabled && (
+          <div className="chat-input-box">
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Type your message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <button className="btn" onClick={sendMessage}>
+              Send
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

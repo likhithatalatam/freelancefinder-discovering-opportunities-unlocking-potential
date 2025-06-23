@@ -34,7 +34,7 @@ const AllApplications = () => {
                 <p>{application.description}</p>
 
                 <span>
-                  <h5>Required Skills</h5>
+                  <h5>Skills</h5>
                   <div className="application-skills">
                     {(application.requiredSkills || []).map((skill, i) => (
                       <p key={i}>{skill}</p>
@@ -64,7 +64,7 @@ const AllApplications = () => {
                 </span>
 
                 <span>
-                  <h5>Freelancer Skills</h5>
+                  <h5>Skills</h5>
                   <div className="application-skills">
                     {(application.freelancerSkills || []).map((skill, i) => (
                       <p key={i}>{skill}</p>

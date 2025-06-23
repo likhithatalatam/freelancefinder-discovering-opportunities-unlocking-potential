@@ -10,7 +10,7 @@ const Register = ({ setAuthType }) => {
     try {
       await register();
     } catch (err) {
-      console.error("❌ Registration failed:", err.message);
+      console.error("Registration failed:", err.message);
     }
   };
 

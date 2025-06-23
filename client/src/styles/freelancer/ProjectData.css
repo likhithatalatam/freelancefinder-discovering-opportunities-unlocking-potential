@@ -9,9 +9,6 @@
   text-align: left;
 }
 
-.project-data {
-}
-
 .project-data h3 {
   font-size: 1.5rem;
   color: rgba(32, 102, 137, 0.826);
@@ -19,12 +16,6 @@
 
 .project-data p {
   font-size: 0.9rem;
-}
-
-.project-data span {
-}
-
-.project-data span h5 {
 }
 
 .project-data span .required-skills {
@@ -40,19 +31,23 @@
   font-size: 0.7rem;
 }
 .proposal-form input {
-  margin: 20px 0;
-  padding: 12px;
-  width: 49%;
+  margin: 25px 0;
+  padding: 15px !important;
+  width: 49% !important;
   border-radius: 6px;
   border: 1px solid grey;
   outline: none;
 }
+.form-control {
+  width: 100% !important;
+}
 .proposal-form textarea {
-  width: 100%;
-  padding: 10px;
+  width: 100% !important;
+  padding: 15px !important;
   border-radius: 6px;
   border: 1px solid grey;
   outline: none;
+  margin: 10px 0;
 }
 .proposal-form button {
   margin: 24px 0;
@@ -69,8 +64,7 @@
   transition-delay: 0.2s;
   transition-timing-function: ease-in;
 }
-.project-data span h6 {
-}
+
 .proposal-form h4 {
   margin: 19px 0;
 }
@@ -80,9 +74,6 @@
     rgba(17, 17, 26, 0.05) 0px 8px 32px;
   padding: 3vh 2vw;
   border-radius: 0.7rem;
-}
-
-.project-form-body h4 {
 }
 
 .project-form-body span {
@@ -102,10 +93,6 @@
 .project-form-body textarea {
   min-height: 20vh;
 }
-
-.project-form-body button {
-}
-
 .project-chat-container {
   width: 35%;
   height: 85vh;
@@ -120,10 +107,6 @@
   font-size: 1.2rem;
   margin: 0;
 }
-
-.project-chat-container hr {
-}
-
 .chat-body {
   height: 95%;
 }
@@ -350,8 +333,9 @@
   width: 30%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   padding: 22px;
-  height: 100%;
+  height: 80vh;
   border-radius: 10px;
+  margin: 0 18px;
 }
 .project-chat-box h5 {
   text-align: center;
@@ -372,30 +356,55 @@
   padding: 18px 0px;
   border-top: 1px solid grey;
 }
-.chat-message {
-  background-color: #e8f0fe;
+.chat-input-box input {
+  border-bottom-left-radius: 30px;
+  border-top-left-radius: 30px;
   padding: 10px;
-  border-radius: 8px;
+}
+.chat-input-box button {
+  border-top-right-radius: 30px;
+  border-bottom-right-radius: 30px;
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: none;
+  color: orange;
+  border: 1px solid orange;
+}
+.chat-input-box button:hover {
+  color: white;
+  background-color: orange;
+}
+.chat-message {
+  background-color: #017cff;
+  padding: 10px;
+  border-radius: 15px;
   margin-bottom: 10px;
   width: fit-content;
   max-width: 70%;
+  color: white;
 }
-
+.project-head .form-control {
+  width: 30% !important;
+}
 .chat-message.own {
-  background-color: #d1f7d6;
+  background-color: orange;
   margin-left: auto;
   text-align: right;
+  color: white;
 }
 
 .chat-message p {
   margin: 0;
   font-size: 0.95rem;
+  color: white;
+  text-align: left;
 }
 
 .chat-message span {
   display: block;
   font-size: 0.7rem;
-  color: gray;
+  color: white;
   margin-top: 4px;
 }
 
@@ -404,20 +413,21 @@
   margin-top: 15px;
   display: flex;
   flex-direction: column;
+  flex-direction: row;
 }
 
 .chat-input input {
   border-radius: 5px;
   padding: 10px;
+  margin: 0;
 }
 
 /* Submission Box */
 .submission-box {
   margin-top: 30px;
-  padding: 15px;
+  padding: 26px;
   border-radius: 10px;
-  background-color: #f0f7ff;
-  border: 1px solid #c4dbf5;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .submission-box input,
@@ -429,6 +439,7 @@
 
 .submission-box h5 {
   margin-bottom: 15px;
+  color: cadetblue;
 }
 
 .btn-success {
@@ -587,29 +598,39 @@
   height: fit-content;
 }
 .proposal-form {
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
   padding: 25px;
   margin: 25px 0;
+  margin-right: 24px;
 }
 .skills-badges {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
-
+.inputs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 .skill-badge {
   padding: 6px 12px;
-  border: 1px solid #c69;
+  border: 1px solid #ee4950;
   border-radius: 20px;
-  color: #c33;
+  color: #ee4950;
   font-size: 14px;
 }
 .skills-list {
   list-style: none;
   padding-left: 0;
 }
-
+.project-details-box .p {
+  font-weight: 500;
+}
+.project-details-box h3 {
+  color: cadetblue;
+}
 .skills-list li {
   display: inline-block;
   padding: 5px 10px;

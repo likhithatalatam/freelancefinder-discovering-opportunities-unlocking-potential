@@ -1,6 +1,3 @@
-.freelancer-home {
-}
-
 .freelancer-data-top {
   position: relative;
   left: 75vw;
@@ -13,10 +10,6 @@
   gap: 10px;
   width: fit-content;
 }
-
-.freelancer-data-top span b {
-}
-
 .freelancer-data-top span p {
   margin: 0;
 }
@@ -89,12 +82,6 @@
   text-align: left;
   margin: 20px 10px;
 }
-
-.freelancer-details-data span {
-}
-
-.freelancer-details-data span {
-}
 .freelancer-details-data button {
   background: none;
   border: 1px solid dodgerblue;
@@ -134,9 +121,6 @@
 .freelancer-details-update h4 {
   margin-top: 2vh;
   font-size: 1.2rem;
-}
-
-.freelancer-details-update input {
 }
 
 .freelancer-details-update textarea {

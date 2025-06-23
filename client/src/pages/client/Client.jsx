@@ -55,7 +55,7 @@ const Client = () => {
             <option value="Assigned">Assigned</option>
           </select>
         </div>
-        {/* ✅ Moved inside client-projects-list */}
+        {/* Moved inside client-projects-list */}
         <div className="projects-list">
           {displayProjects.length > 0 ? (
             displayProjects.map((project) => (

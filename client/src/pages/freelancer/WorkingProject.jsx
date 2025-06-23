@@ -16,29 +16,29 @@ const WorkingProject = () => {
       const res = await axios.get(`http://localhost:6001/fetch-project/${id}`);
       setProject(res.data);
     } catch (err) {
-      console.error("❌ Failed to fetch project details:", err);
+      console.error("Failed to fetch project details:", err);
     }
   };
 
   const handleApproveSubmission = async () => {
     try {
       await axios.get(`http://localhost:6001/approve-submission/${id}`);
-      alert("✅ Submission approved");
+      alert("Submission approved");
       fetchProjectDetails(); // refresh
     } catch (err) {
       console.error(err);
-      alert("❌ Approval failed");
+      alert("Approval failed");
     }
   };
 
   const handleRejectSubmission = async () => {
     try {
       await axios.get(`http://localhost:6001/reject_submission/${id}`);
-      alert("🚫 Submission rejected");
+      alert("Submission rejected");
       fetchProjectDetails();
     } catch (err) {
       console.error(err);
-      alert("❌ Rejection failed");
+      alert("Rejection failed");
     }
   };
 
@@ -62,7 +62,7 @@ const WorkingProject = () => {
 
       {project.submission ? (
         <>
-          <h4 className="mt-4">📤 Submitted Work</h4>
+          <h4 className="mt-4">Submitted Work</h4>
           <p>
             <strong>Description:</strong> {project.submissionDescription}
           </p>
@@ -85,21 +85,21 @@ const WorkingProject = () => {
                 className="btn btn-success me-3"
                 onClick={handleApproveSubmission}
               >
-                ✅ Approve Submission
+                Approve Submission
               </button>
               <button
                 className="btn btn-danger"
                 onClick={handleRejectSubmission}
               >
-                ❌ Reject Submission
+                Reject Submission
               </button>
             </div>
           ) : (
-            <p className="text-success mt-3">✔️ Submission Approved</p>
+            <p className="text-success mt-3"> Submission Approved</p>
           )}
         </>
       ) : (
-        <p className="mt-4">🚧 No submission yet.</p>
+        <p className="mt-4"> No submission yet.</p>
       )}
     </div>
   );

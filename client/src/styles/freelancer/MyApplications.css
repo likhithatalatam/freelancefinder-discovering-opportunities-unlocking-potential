@@ -1,10 +1,6 @@
 .user-applications-page {
   padding: 2vh 2vw;
 }
-
-.user-applications-page h3 {
-}
-
 .user-applications-body {
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
     rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
@@ -49,7 +45,10 @@
   font-size: 1.2rem;
   color: rgba(26, 83, 121, 0.646);
 }
-
+.applications-page h3 {
+  text-align: left;
+  margin-bottom: 20px;
+}
 .user-application-half p {
   font-size: 0.8rem;
 }
@@ -65,17 +64,10 @@
   font-weight: 500;
 }
 
-.user-application-half span {
-}
-
 .user-application-half span h5 {
   font-size: 1.1rem;
   color: rgba(9, 55, 86, 0.877);
 }
-
-.user-application-half span p {
-}
-
 .user-application-half span .application-skills {
   display: flex;
   gap: 10px;
@@ -106,36 +98,57 @@
   gap: 20px;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px,
     rgba(17, 17, 26, 0.05) 0px 8px 32px;
+  overflow-y: scroll;
+  height: 76vh;
+  border-radius: 10px;
 }
 
 .application-card {
   display: flex;
   justify-content: space-between;
-  border: 1px solid #ddd;
-  border-radius: 8px;
   padding: 15px;
-  background-color: #f9f9f9;
-  text-align: left;
-  border-bottom: 1px solid grey;
-}
+  margin: 10px 0;
 
+  text-align: left;
+}
+.application-card:hover {
+  background-color: #f9f9f9;
+}
+.client-application-half h5 {
+  font-size: 1.55rem;
+  color: cadetblue;
+}
 .application-left,
 .application-right {
   width: 48%;
   width: 48%;
   padding: 10px;
 }
-
+.application-left h3 {
+  color: cadetblue;
+}
+.application-right h4 {
+  color: cadetblue;
+}
+.application-right {
+  border-left: 1px solid #f2f2f2;
+}
+.skills strong {
+  color: cadetblue;
+  font-size: 20px;
+}
 .skills {
   margin: 10px 0;
 }
-
+.skill-badges {
+  margin: 20px 0;
+}
 .skill-badge {
   display: inline-block;
   padding: 4px 10px;
   margin: 3px;
-  background-color: #ffecec;
-  color: #d9534f;
+  background-color: none;
+  color: red;
   border-radius: 20px;
   font-size: 12px;
 }

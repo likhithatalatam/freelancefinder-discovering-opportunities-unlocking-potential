@@ -81,3 +81,62 @@
     align-items: flex-start;
   }
 }
+.admin-home-page {
+  padding: 40px;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.admin-home-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+}
+
+.admin-home-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 21px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
+  width: 78%;
+  height: 155px;
+}
+.admin-home-card button:hover {
+  background-color: #ee4950;
+  color: #f1e3e4;
+  border: 1.5px solid #ee4950;
+}
+.admin-home-card h5 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+.admin-home-card h6 {
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Optional: subtle divider between header and grid */
+.admin-home-page::before {
+  display: block;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #34495e;
+}
+.admin-home-card button {
+  background-color: rgba(240, 248, 255, 0);
+  color: #ee4950;
+  border: 1.5px solid #ee4950;
+  font-size: 0.9rem;
+  padding: 8px 10px;
+  width: 71%;
+  border-radius: 0.4rem;
+  margin: 20px 0;
+}

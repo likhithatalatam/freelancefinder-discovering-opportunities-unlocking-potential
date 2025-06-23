@@ -9,7 +9,7 @@ const Login = ({ setAuthType }) => {
     try {
       await login();
     } catch (err) {
-      console.error("❌ Login failed:", err.message);
+      console.error("Login failed:", err.message);
     }
   };
 

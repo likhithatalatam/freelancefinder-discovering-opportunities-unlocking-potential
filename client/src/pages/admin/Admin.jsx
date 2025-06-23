@@ -25,7 +25,7 @@ const Admin = () => {
       const completed = allProjects.filter((pro) => pro.status === "Completed");
       setCompletedProsCount(completed.length);
     } catch (err) {
-      console.error("❌ Failed to fetch projects:", err.message);
+      console.error("Failed to fetch projects:", err.message);
     }
   };
 
@@ -34,7 +34,7 @@ const Admin = () => {
       const res = await axios.get("http://localhost:6001/fetch-applications");
       setApplicationsCount(res.data.length);
     } catch (err) {
-      console.error("❌ Failed to fetch applications:", err.message);
+      console.error("Failed to fetch applications:", err.message);
     }
   };
 
@@ -43,7 +43,7 @@ const Admin = () => {
       const res = await axios.get("http://localhost:6001/fetch-users");
       setUsersCount(res.data.length);
     } catch (err) {
-      console.error("❌ Failed to fetch users:", err.message);
+      console.error("Failed to fetch users:", err.message);
     }
   };
 
@@ -53,18 +53,28 @@ const Admin = () => {
         <div className="admin-home-card">
           <h5>Projects</h5>
           <h6>{projectsCount}</h6>
+          <button onClick={() => navigate("AdminProjects.jsx")}>
+            View Projects
+          </button>
         </div>
         <div className="admin-home-card">
           <h5>Completed Projects</h5>
           <h6>{completedProsCount}</h6>
+          <button onClick={() => navigate("AdminProjects.jsx")}>
+            Completed Projects
+          </button>
         </div>
         <div className="admin-home-card">
           <h5>Applications</h5>
           <h6>{applicationsCount}</h6>
+          <button onClick={() => navigate("AllApplications.jsx")}>
+            Applications
+          </button>
         </div>
         <div className="admin-home-card">
           <h5>Users</h5>
           <h6>{usersCount}</h6>
+          <button onClick={() => navigate("AllUsers.jsx")}>Users</button>
         </div>
       </div>
     </div>

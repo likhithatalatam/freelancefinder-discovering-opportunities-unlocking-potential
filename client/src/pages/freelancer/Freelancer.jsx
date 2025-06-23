@@ -52,7 +52,7 @@ const Freelancer = () => {
   };
 
   const updateUserData = async () => {
-    console.log("📌 freelancerId before API call:", freelancerId); // ✅ Step 1: log it here
+    console.log("freelancerId before API call:", freelancerId); // ✅ Step 1: log it here
 
     try {
       await axios.post("http://localhost:6001/update-freelancer", {
@@ -63,10 +63,10 @@ const Freelancer = () => {
 
       await fetchUserData(freelancerId);
       setIsDataUpdateOpen(false);
-      alert("✅ Skills have been updated");
+      alert("Skills have been updated");
     } catch (err) {
-      console.error("❌ Error updating freelancer data", err);
-      alert("❌ Failed to update skills");
+      console.error("Error updating freelancer data", err);
+      alert("Failed to update skills");
     }
   };
 

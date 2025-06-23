@@ -29,39 +29,41 @@ const MyApplications = () => {
             <div className="application-left">
               <h3>{app.title}</h3>
               <p>{app.description}</p>
-
-              <p>
-                <strong>Budget:</strong> ₹{app.budget}
-              </p>
               <div className="skills">
-                <strong>Skills:</strong>
-                {app.requiredSkills.map((skill, i) => (
-                  <span key={i} className="skill-badge">
-                    {skill}
-                  </span>
-                ))}
+                <strong>Skills</strong>
+                <br />
+                <div className="skill-badges">
+                  {app.requiredSkills.map((skill, i) => (
+                    <span key={i} className="skill-badge">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
               </div>
               <p>
                 <strong>Budget:</strong> ₹{app.budget}
               </p>
             </div>
             <div className="application-right">
-              <h6>Proposal</h6>
+              <h4>Proposal</h4>
               <p>{app.proposal}</p>
-              <p>
+              <div className="skills">
+                <strong>Skills</strong>
+                <br />
+                <div className="skill-badges">
+                  {app.freelancerSkills.map((skill, i) => (
+                    <span key={i} className="skill-badge">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              {/* <p>
                 <strong>Estimated Time:</strong> {app.estimatedTime}
-              </p>
+              </p> */}
               <p>
                 <strong>Proposed Budget:</strong> ₹{app.bidAmount}
               </p>
-              <div className="skills">
-                <strong>Skills:</strong>
-                {app.freelancerSkills.map((skill, i) => (
-                  <span key={i} className="skill-badge">
-                    {skill}
-                  </span>
-                ))}
-              </div>
               <p>
                 <strong>Status:</strong> {app.status}
               </p>

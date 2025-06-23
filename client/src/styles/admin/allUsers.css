@@ -3,6 +3,7 @@
 }
 
 .all-users-page h3 {
+  text-align: left;
 }
 
 .all-users {
@@ -14,12 +15,18 @@
 .user {
   display: flex;
   width: 70%;
+  flex-direction: column;
   justify-content: space-between;
   border: 1px solid #ee460e5b;
   padding: 2vh 1.5vw;
   border-radius: 0.8rem;
 }
-
+.user-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  text-align: left;
+}
 .user span {
 }
 

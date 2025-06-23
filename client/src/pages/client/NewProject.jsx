@@ -34,11 +34,11 @@ const NewProject = () => {
         clientEmail,
       });
 
-      alert("✅ Project created successfully!");
+      alert("Project created successfully!");
       navigate("/client", { state: { refresh: Date.now() } });
     } catch (err) {
-      console.error("❌ Error creating project", err);
-      alert("❌ Failed to create project.");
+      console.error("Error creating project", err);
+      alert("Failed to create project.");
     }
   };
 
