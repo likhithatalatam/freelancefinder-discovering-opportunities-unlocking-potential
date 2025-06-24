@@ -1,5 +1,3 @@
-/* ===== ADMIN DASHBOARD GENERAL STYLES ===== */
-
 .admin-page {
   padding: 2rem;
   background-color: #f7f9fc;
@@ -18,8 +16,6 @@
   font-size: 28px;
   color: #333;
 }
-
-/* ===== ADMIN ACTION PANEL ===== */
 
 .admin-actions {
   display: flex;
@@ -42,8 +38,6 @@
 .admin-actions button:hover {
   background-color: #0056b3;
 }
-
-/* ===== TABLE STYLING ===== */
 
 .admin-table {
   width: 100%;
@@ -68,8 +62,6 @@
 .admin-table tbody tr:hover {
   background-color: #f9f9f9;
 }
-
-/* ===== RESPONSIVE ===== */
 
 @media (max-width: 768px) {
   .admin-actions {

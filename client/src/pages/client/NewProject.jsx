@@ -28,7 +28,7 @@ const NewProject = () => {
         title,
         description,
         budget,
-        skills: skills.split(",").map((s) => s.trim()), // ✅ Convert to array
+        skills: skills.split(",").map((s) => s.trim()),
         clientId,
         clientName,
         clientEmail,

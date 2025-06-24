@@ -42,9 +42,7 @@
 .my-projects-list {
   width: 70%;
   height: 82vh;
-
   overflow-y: scroll;
-
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   border-radius: 0.7rem;
   padding: 3vh 2vw;
@@ -134,6 +132,4 @@
   display: flex;
   gap: 30px;
   margin-top: 3vh;
-}
-.form-check-input {
 }

@@ -27,7 +27,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log("✅ Socket connected");
+  console.log("Socket connected");
   SocketHandler(socket);
 });
 
@@ -38,7 +38,7 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => {
-    console.log("✅ Connected to MongoDB");
+    console.log("Connected to MongoDB");
 
     // Routes
 
@@ -87,10 +87,10 @@ mongoose
         res.status(500).json({ error: err.message });
       }
     });
-    // ✅ FIXED: Update freelancer route
+    //FIXED: Update freelancer route
     app.post("/update-freelancer", async (req, res) => {
       try {
-        console.log("📥 Incoming Update Request Body:", req.body);
+        console.log("Incoming Update Request Body:", req.body);
 
         const { freelancerId, updateSkills, description } = req.body;
         const freelancer = await Freelancer.findOne({ userId: freelancerId });
@@ -104,10 +104,10 @@ mongoose
 
         await freelancer.save();
 
-        console.log("✅ Freelancer updated:", freelancer);
+        console.log("Freelancer updated:", freelancer);
         res.status(200).json(freelancer);
       } catch (err) {
-        console.error("❌ Error in /update-freelancer:", err.message);
+        console.error("Error in /update-freelancer:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
@@ -132,7 +132,7 @@ mongoose
 
     app.post("/new-project", async (req, res) => {
       try {
-        console.log("📥 New Project Payload:", req.body);
+        console.log("New Project Payload:", req.body);
 
         const {
           title,
@@ -162,10 +162,10 @@ mongoose
 
         await newProject.save();
 
-        console.log("✅ Project created:", newProject);
+        console.log("Project created:", newProject);
         res.status(200).json({ message: "Project created" });
       } catch (err) {
-        console.error("❌ Error creating project:", err.message);
+        console.error("Error creating project:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
@@ -267,7 +267,7 @@ mongoose
     });
 
     // Submission
-    // ✅ Submit Project (Freelancer)
+    // Submit Project (Freelancer)
     app.post("/submit-project", async (req, res) => {
       try {
         const { projectId, projectLink, manualLink, submissionDescription } =
@@ -290,14 +290,14 @@ mongoose
 
         await project.save();
 
-        res.status(200).json({ message: "✅ Submission saved" });
+        res.status(200).json({ message: "Submission saved" });
       } catch (err) {
-        console.error("❌ Error saving submission:", err.message);
+        console.error("Error saving submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
 
-    // ✅ Approve Submission (Client)
+    // Approve Submission (Client)
     app.get("/approve-submission/:id", async (req, res) => {
       try {
         const project = await Project.findById(req.params.id);
@@ -321,14 +321,14 @@ mongoose
         await project.save();
         await freelancer.save();
 
-        res.status(200).json({ message: "✅ Submission approved" });
+        res.status(200).json({ message: "Submission approved" });
       } catch (err) {
-        console.error("❌ Error approving submission:", err.message);
+        console.error("Error approving submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
 
-    // ❌ Reject Submission (Client)
+    // Reject Submission (Client)
     app.get("/reject-submission/:id", async (req, res) => {
       try {
         const project = await Project.findById(req.params.id);
@@ -344,10 +344,10 @@ mongoose
         await project.save();
 
         res.status(200).json({
-          message: "❌ Submission rejected, freelancer may resubmit.",
+          message: "Submission rejected, freelancer may resubmit.",
         });
       } catch (err) {
-        console.error("❌ Error rejecting submission:", err.message);
+        console.error("Error rejecting submission:", err.message);
         res.status(500).json({ error: err.message });
       }
     });
@@ -373,9 +373,9 @@ mongoose
 
     // Start server
     server.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
+    console.error("MongoDB connection error:", err.message);
   });

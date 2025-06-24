@@ -115,7 +115,7 @@ const ProjectData = () => {
           Budget <br /> ₹{project.budget}
         </p>
 
-        {/* 📝 Proposal Form - Visible only if not assigned */}
+        {/*Proposal Form - Visible only if not assigned */}
         {!isAssignedFreelancer && (
           <div className="proposal-form mt-3">
             <h5>Submit Proposal</h5>
@@ -160,7 +160,7 @@ const ProjectData = () => {
           </div>
         )}
 
-        {/* 📤 Submission Form - Only if assigned */}
+        {/*Submission Form - Only if assigned */}
         {isAssignedFreelancer && (
           <div className="submission-form mt-4">
             <h5>Submit Project</h5>

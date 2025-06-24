@@ -52,7 +52,7 @@ const Freelancer = () => {
   };
 
   const updateUserData = async () => {
-    console.log("freelancerId before API call:", freelancerId); // ✅ Step 1: log it here
+    console.log("freelancerId before API call:", freelancerId);
 
     try {
       await axios.post("http://localhost:6001/update-freelancer", {
