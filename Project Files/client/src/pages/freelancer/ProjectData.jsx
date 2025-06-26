@@ -61,7 +61,17 @@ const ProjectData = () => {
   const sendMessage = () => {
     if (!message.trim()) return;
     const time = new Date().toISOString();
+
     socket.emit("new-message", { projectId, senderId: userId, message, time });
+
+    setChats((prev) => ({
+      ...prev,
+      messages: [
+        ...(prev?.messages || []),
+        { senderId: userId, text: message, time },
+      ],
+    }));
+
     setMessage("");
   };
 
@@ -72,7 +82,10 @@ const ProjectData = () => {
       manualLink: manual,
       submissionDescription: description,
     });
-    alert("Project submitted successfully!");
+    alert("✅ Project submitted successfully!");
+    setLink("");
+    setManual("");
+    setDescription("");
     fetchProject();
   };
 
@@ -86,10 +99,10 @@ const ProjectData = () => {
         bidAmount,
         estimatedTime,
       });
-      alert("Proposal sent successfully!");
+      alert("✅ Proposal sent successfully!");
       fetchProject();
     } catch (err) {
-      alert("Proposal failed.");
+      alert("❌ Proposal failed.");
       console.error(err);
     }
   };
@@ -115,7 +128,7 @@ const ProjectData = () => {
           Budget <br /> ₹{project.budget}
         </p>
 
-        {/*Proposal Form - Visible only if not assigned */}
+        {/* 📝 Proposal Form - Show if not assigned */}
         {!isAssignedFreelancer && (
           <div className="proposal-form mt-3">
             <h5>Submit Proposal</h5>
@@ -154,20 +167,20 @@ const ProjectData = () => {
             </button>
             {alreadyApplied && (
               <p className="text-muted mt-1">
-                Already applied to this project.
+                ✅ Already applied to this project.
               </p>
             )}
           </div>
         )}
 
-        {/*Submission Form - Only if assigned */}
+        {/* 📤 Submission Form - Show if assigned */}
         {isAssignedFreelancer && (
           <div className="submission-form mt-4">
             <h5>Submit Project</h5>
 
             {project.submissionAccepted ? (
               <p className="text-success mt-2">
-                Project marked completed by client.
+                ✅ Project marked completed by client.
               </p>
             ) : project.submission ? (
               <>
@@ -237,7 +250,7 @@ const ProjectData = () => {
         <div className="chat-messages">
           {!isAssignedFreelancer && (
             <p className="text-muted">
-              <i>Chat will be enabled if the project is assigned to you!!</i>
+              <i>❌ You are not assigned to this project. Chat is disabled.</i>
             </p>
           )}
           {isAssignedFreelancer &&

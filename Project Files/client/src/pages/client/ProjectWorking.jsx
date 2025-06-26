@@ -13,6 +13,8 @@ const ProjectWorking = () => {
   const [chats, setChats] = useState({ messages: [] });
   const [message, setMessage] = useState("");
 
+  const isChatEnabled = ["Assigned", "Completed"].includes(project.status);
+
   useEffect(() => {
     fetchProject();
     fetchChats();
@@ -46,27 +48,37 @@ const ProjectWorking = () => {
   const sendMessage = () => {
     if (!message.trim()) return;
     const time = new Date().toISOString();
+
+    // Emit to socket
     socket.emit("new-message", { projectId, senderId: userId, message, time });
+
+    // Instantly update local chat UI
+    setChats((prev) => ({
+      ...prev,
+      messages: [
+        ...(prev?.messages || []),
+        { senderId: userId, text: message, time },
+      ],
+    }));
+
     setMessage("");
   };
 
   const approveSubmission = async () => {
     await axios.get(`http://localhost:6001/approve-submission/${projectId}`);
-    alert("Submission approved. Project marked completed.");
+    alert("✅ Submission approved. Project marked completed.");
     fetchProject();
   };
 
   const rejectSubmission = async () => {
     await axios.get(`http://localhost:6001/reject-submission/${projectId}`);
-    alert("Submission rejected. Freelancer can resubmit.");
+    alert("❌ Submission rejected. Freelancer can resubmit.");
     fetchProject();
   };
 
-  const isChatEnabled = ["Assigned", "Completed"].includes(project.status);
-
   return (
     <div className="project-working-page">
-      {/* LEFT: Project Details */}
+      {/* LEFT: Project Info */}
       <div className="project-details-box">
         <h3>{project.title}</h3>
         <p>{project.description}</p>
@@ -84,12 +96,12 @@ const ProjectWorking = () => {
           </div>
         )}
 
-        {/*Submission Section */}
+        {/* Submission Section */}
         {isChatEnabled && (
           <div className="submission-box mt-3">
             <h5>Submission</h5>
             {!project.submission ? (
-              <p className="text-muted">No submissions yet.</p>
+              <p className="text-muted">⚠️ No submissions yet.</p>
             ) : (
               <>
                 <p>
@@ -109,8 +121,7 @@ const ProjectWorking = () => {
                   </a>
                 </p>
                 <p>
-                  <strong>Description for work</strong> <br />{" "}
-                  {project.submissionDescription}
+                  <strong>Description:</strong> {project.submissionDescription}
                 </p>
                 {!project.submissionAccepted ? (
                   <div className="action-buttons mt-2">
@@ -118,17 +129,17 @@ const ProjectWorking = () => {
                       className="btn btn-success me-2"
                       onClick={approveSubmission}
                     >
-                      Approve
+                      ✅ Approve
                     </button>
                     <button
                       className="btn btn-danger"
                       onClick={rejectSubmission}
                     >
-                      Reject
+                      ❌ Reject
                     </button>
                   </div>
                 ) : (
-                  <p className="text-success mt-2">Submission Approved</p>
+                  <p className="text-success mt-2">🎉 Submission Approved</p>
                 )}
               </>
             )}
@@ -142,8 +153,10 @@ const ProjectWorking = () => {
         <div className="chat-messages">
           {!isChatEnabled ? (
             <p className="text-muted text-center mt-2">
-              <i>Chat will be enabled if the project is assigned..</i>
+              ❌ Chat disabled. Project not assigned.
             </p>
+          ) : chats?.messages?.length === 0 ? (
+            <p className="text-muted text-center">No messages yet.</p>
           ) : (
             chats?.messages?.map((chat, i) => (
               <div
@@ -159,7 +172,6 @@ const ProjectWorking = () => {
           )}
         </div>
 
-        {/* Input box only shown when chat is enabled */}
         {isChatEnabled && (
           <div className="chat-input-box">
             <input
@@ -169,7 +181,7 @@ const ProjectWorking = () => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
             />
-            <button className="btn" onClick={sendMessage}>
+            <button className="btn btn-primary mt-2" onClick={sendMessage}>
               Send
             </button>
           </div>
